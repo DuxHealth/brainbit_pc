@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:NeuroDemo;assembly=NeuroDemo" 
+             xmlns:pages="clr-namespace:NeuroDemo.Pages"
+             x:Class="NeuroDemo.Pages.SearchSensorsPage"
+             Title="BrainBit Demo"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="20" />
+                <RowDefinition Height="100" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Column="1" Grid.Row="1"
+                    x:Name="SearchButton"
+                    Text="{Binding SearchingText}"
+                    Clicked="SearchButton_Clicked"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    FontSize="Body"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White"
+                    />
+
+            <ListView Grid.Column="1" Grid.Row="2" 
+                      x:Name="DevicesList"
+                      VerticalOptions="FillAndExpand"
+                      RowHeight="60"
+                      ItemSelected="DevicesList_ItemSelected">
+              
+                <ListView.ItemTemplate>
+                    <DataTemplate> 
+                        <ViewCell>
+                            <Frame Margin="0,5,0,5" CornerRadius="10" Padding="2" BackgroundColor="Orange" VerticalOptions="FillAndExpand" HorizontalOptions="FillAndExpand">
+                                <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                                    <Label
+                                        Text="{Binding Name}"
+                                        TextColor="Black" 
+                                        FontSize="Small"
+                                        HorizontalTextAlignment="Start"
+                                        VerticalTextAlignment="Center"/>
+                                    <Label 
+                                        Text="{Binding Address}"
+                                        TextColor="Black"
+                                        FontSize="Small"
+                                        HorizontalTextAlignment="Start"
+                                        VerticalTextAlignment="Center"/>
+                                </StackLayout>
+                            </Frame>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

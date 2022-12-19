@@ -1,0 +1,62 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" xmlns:pages="clr-namespace:NeuroDemo.Pages"
+             x:Class="NeuroDemo.Pages.MainPage"
+             Title="BrainBit Demo"
+             BackgroundColor="White">
+    <ContentPage.Content>
+        <Grid ColumnSpacing="5" RowSpacing="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="2*" />
+                <ColumnDefinition Width="4*" />
+                <ColumnDefinition Width="2*" />
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="40" />
+            </Grid.RowDefinitions>
+            
+            <Button Grid.Column="1" Grid.Row="1"
+                    x:Name="SearchButton"
+                    Text="Device search"
+                    Clicked="SearchButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White"
+                    />
+
+            <Button Grid.Column="1" Grid.Row="2"
+                    x:Name="DeviceInfoButton"
+                    Text="Device Info"
+                    Clicked="DeviceInfoButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    IsEnabled="{Binding IsDeviceConnected}"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White"
+                    />
+
+            <Button Grid.Column="1" Grid.Row="3"
+                    x:Name="SignalButton"
+                    Text="Signal"
+                    Clicked="SignalButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    IsEnabled="{Binding IsDeviceConnected}"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White"/>
+            <pages:DeviceStateView x:Name="DevStateView" BackgroundColor="AliceBlue" Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="5"></pages:DeviceStateView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
