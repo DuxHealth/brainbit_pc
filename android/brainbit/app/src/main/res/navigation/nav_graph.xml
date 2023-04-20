@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/menuFragment">
+
+    <fragment
+        android:id="@+id/searchFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.search.SearchFragment"
+        android:label="Search Fragment"
+        tools:layout="@layout/search_fragment"/>
+    <fragment
+        android:id="@+id/signalFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.signal.SignalFragment"
+        android:label="Signal Fragment"
+        tools:layout="@layout/signal_fragment" />
+    <fragment
+        android:id="@+id/infoFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.info.InfoFragment"
+        android:label="Info Fragment"
+        tools:layout="@layout/info_fragment" />
+    <fragment
+        android:id="@+id/menuFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.menu.MenuFragment"
+        android:label="Menu Fragment"
+        tools:layout="@layout/fragment_menu">
+        <action
+            android:id="@+id/action_menuFragment_to_infoFragment"
+            app:destination="@id/infoFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_signalFragment"
+            app:destination="@id/signalFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_resistFragment"
+            app:destination="@id/resistFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_searchFragment"
+            app:destination="@id/searchFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/resistFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.resist.ResistFragment"
+        android:label="Resist Fragment"
+        tools:layout="@layout/fragment_resist" />
+</navigation>
