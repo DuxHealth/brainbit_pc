@@ -1,0 +1,63 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:BrainBitDemo.Pages;assembly=BrainBitDemo"
+    xmlns:elements="clr-namespace:BrainBitDemo.Pages.Elements;assembly=BrainBitDemo"
+    x:Class="BrainBitDemo.Pages.SignalsPage"
+    Title="Signal Demo">
+
+    <ContentPage.Content>
+
+        <Grid
+            RowDefinitions="0.1*, 0.23*, 0.23*, 0.23*, 0.23*, 40"
+            RowSpacing="5">
+
+            <Button
+                    Grid.Row="0"
+                    Text="{Binding SignalButtonText}"
+                    Clicked="SignalButton_Clicked"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    BackgroundColor="DarkCyan"
+                    FontSize="Body"
+                    CornerRadius="10"
+                    TextColor="White" />
+
+            <elements:SignalGraph
+                Grid.Row="1"
+                x:Name="ChartO1"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" />
+
+            <elements:SignalGraph
+                Grid.Row="2"
+                x:Name="ChartO2"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" />
+
+            <elements:SignalGraph
+                Grid.Column="0"
+                Grid.Row="3"
+                x:Name="ChartT3"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" />
+
+            <elements:SignalGraph
+                Grid.Column="0"
+                Grid.Row="4"
+                x:Name="ChartT4"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand" />
+
+            <pages:DeviceStateView
+                x:Name="DevStateView"
+                BackgroundColor="AliceBlue"
+                Grid.Row="5" />
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

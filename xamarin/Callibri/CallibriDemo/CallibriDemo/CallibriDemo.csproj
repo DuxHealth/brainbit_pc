@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <ProduceReferenceAssembly>true</ProduceReferenceAssembly>
+        <LangVersion>default</LangVersion>
+        <UserSecretsId>d43e17e1-35a9-468f-a40f-c09cbb73fd73</UserSecretsId>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <DebugType>portable</DebugType>
+        <DebugSymbols>true</DebugSymbols>
+        <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+        <WarningLevel>0</WarningLevel>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.3" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2578" />
+        <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
+        <PackageReference Include="XNeuroSDK" Version="1.0.4" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Compile Update="Pages\MainPage.xaml.cs">
+            <DependentUpon>MainPage.xaml</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
+    </ItemGroup>
+</Project>
