@@ -109,9 +109,9 @@ class BrainbitController{
             case .firmwareMode:
                 result += "\n\t\tValue: \(modeEnumToString(mode: sensor?.firmwareMode ?? .application))"
             case .samplingFrequency:
-                result += "\n\t\tValue: \(sfEnumToString(sf: sensor?.samplingFrequency ?? .hz250))"
+                result += "\n\t\tValue: \(sfEnumToString(sf: sensor?.samplingFrequency ?? .unsupported))"
             case .gain:
-                result += "\n\t\tValue: \(gainToString(gain: sensor?.gain ?? .gain6))"
+                result += "\n\t\tValue: \(gainToString(gain: sensor?.gain ?? .gainUnsupported))"
             case .offset:
                 result += "\n\t\tValue: \(String(describing: sensor?.dataOffset))"
             case .firmwareVersion:
