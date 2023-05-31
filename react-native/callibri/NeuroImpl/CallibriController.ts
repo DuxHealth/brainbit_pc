@@ -100,7 +100,7 @@ class CallibriController {
         .then((sensor) => {
           this._sensor = sensor as CallibriSensor
 
-          this._sensor.setSignalTypeCallibri(CallibriSignalType.ECG)
+          this._sensor.setSignalTypeCallibri(CallibriSignalType.EMG)
           this._sensor.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
 
           this._sensor.AddConnectionChanged((state) => { 
