@@ -10,6 +10,7 @@ from time import sleep
 
 signal_data = queue.Queue()  # max size 100
 calculations_done = False
+buf_size = 100
 
 
 def sensor_found(scanner, sensors):
@@ -37,8 +38,8 @@ def on_signal_received(sensor, data):
 
 def worker():
     while not calculations_done:
-        if signal_data.qsize() > 100:
-            rawData = [signal_data.get() for _ in range(100)]
+        if signal_data.qsize() > buf_size:
+            rawData = [signal_data.get() for _ in range(buf_size)]
             callibri_math.push_data(rawData)
             callibri_math.process_data_arr()
             if callibri_math.rr_detected():
@@ -58,7 +59,7 @@ def worker():
 
 
 try:
-    samplingRate = 1000
+    samplingRate = buf_size * 10
     dataWindow = samplingRate / 2
     nwinsForPressureIndex = 30
     callibri_math = CallibriMath(samplingRate, int(dataWindow), nwinsForPressureIndex)
@@ -92,8 +93,9 @@ try:
 
         sensor.signal_type_callibri = CallibriSignalType.CallibriSignalTypeECG
         sensor.sampling_frequency = SensorSamplingFrequency.FrequencyHz1000
-
-        sensFamily = sensor.sens_family
+        sensor.hardware_filters = [SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz,
+                                   SensorFilter.FilterBSFBwhLvl2CutoffFreq45_55Hz,
+                                   SensorFilter.FilterBSFBwhLvl2CutoffFreq55_65Hz]
 
         if sensor.is_supported_parameter(SensorParameter.ParameterSamplingFrequency):
             print(sensor.sampling_frequency)
