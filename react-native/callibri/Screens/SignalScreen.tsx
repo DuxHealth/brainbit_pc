@@ -72,7 +72,7 @@ export default function SignalScreen({ navigation }: NativeStackScreenProps<any>
     setIsSignal(!isSignal)
     CallibriControllerInstance.electrodeChangedCallback = undefined
     CallibriControllerInstance.signalReceivedCallback = undefined
-    CallibriControllerInstance.stopEnvelope()
+    CallibriControllerInstance.stopSignal()
   }
 
   return (

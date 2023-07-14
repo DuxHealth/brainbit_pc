@@ -94,6 +94,10 @@ class CallibriController {
     return this._sensor === undefined ? 0 : this._sensor.getState();
   }
 
+  public get samplingFreq(): SensorSamplingFrequency {
+    return this._sensor === undefined ? SensorSamplingFrequency.FrequencyUnsupported : this._sensor.getSamplingFrequency();
+  }
+
   async createAndConnect(info: SensorInfo): Promise<SensorState> {
     return new Promise<SensorState>(async (resolve, reject) => {
       this._scanner?.createSensor(info)
@@ -102,6 +106,8 @@ class CallibriController {
 
           this._sensor.setSignalTypeCallibri(CallibriSignalType.EMG)
           this._sensor.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
+
+          this._sensor.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
 
           this._sensor.AddConnectionChanged((state) => { 
             if(this.connectionChangedCallback != undefined)

@@ -30,6 +30,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
           { key: 'Info' },
           { key: 'Signal' },
           { key: 'Envelope' },
+          { key: 'ECG' },
         ]}
         renderItem={
           ({ item }) =>

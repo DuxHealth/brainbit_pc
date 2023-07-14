@@ -6,6 +6,7 @@ import InfoScreen from './Screens/InfoScreen';
 import SignalScreen from './Screens/SignalScreen';
 import SearchScreen from './Screens/SearchScreen';
 import EnvelopeScreen from './Screens/EnvelopeScreen';
+import ECGScreen from './Screens/ECGScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -18,6 +19,7 @@ function App() {
       <Stack.Screen name="Search" component={SearchScreen} />
       <Stack.Screen name="Signal" component={SignalScreen} />
       <Stack.Screen name="Envelope" component={EnvelopeScreen} />
+      <Stack.Screen name="ECG" component={ECGScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
