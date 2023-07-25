@@ -5,8 +5,7 @@ using System.Linq;
 using CallibriDemo.NeuroImpl;
 
 using NeuroSDK;
-
-
+using Neurotech.Filters;
 using Xamarin.Forms.Xaml;
 
 namespace CallibriDemo.Pages;
@@ -16,6 +15,22 @@ public partial class SignalsPage
 {
     private readonly object     _lockObj = new();
     private          bool       _isStarted;
+
+    private List<FilterParam> _selectedFilters;
+
+    private FilterList _currentFilterList;
+    public FilterList CurrentFilterList
+    {
+        get
+        {
+            lock (_lockObj) return _currentFilterList;
+        }
+
+        set
+        {
+            lock (_lockObj) _currentFilterList = value;
+        }
+    }
 
     public SignalsPage()
     {
@@ -92,6 +107,21 @@ public partial class SignalsPage
             StartChart();
         else
             StopChart();
+    }
+
+    private async void Filters_Clicked(object sender, EventArgs e)
+    {
+        var filtersPopUp = new ChooseFiltersPage(_selectedFilters);
+        _selectedFilters = await filtersPopUp.Show(Navigation);
+
+        if (_selectedFilters is { Count: > 0 })
+        {
+            var newFilterList = new FilterList();
+            foreach (FilterParam item in _selectedFilters) newFilterList.AddFilter(new Filter(item));
+            CurrentFilterList = newFilterList;
+        }
+        else
+            CurrentFilterList = null;
     }
 
 }

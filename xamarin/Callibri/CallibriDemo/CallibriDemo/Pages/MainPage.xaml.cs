@@ -74,4 +74,10 @@ public partial class MainPage
 
     private async void EnvelopeButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new EnvelopePage()); }
 
+    private async void EmotionButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new EmotionPage()); }
+
+    private async void SpectrumButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new SpectrumPage()); }
+
+    private async void ECGButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new ECGPage()); }
+
 }

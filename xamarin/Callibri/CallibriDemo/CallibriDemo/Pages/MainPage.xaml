@@ -63,6 +63,39 @@
                     BackgroundColor="DarkCyan"
                     CornerRadius="10"
                     TextColor="White" />
+
+                <Button
+                    Text="Emotion"
+                    Clicked="EmotionButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    IsEnabled="{Binding IsDeviceConnected}"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White" />
+
+                <Button
+                    Text="Spectrum"
+                    Clicked="SpectrumButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    IsEnabled="{Binding IsDeviceConnected}"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White" />
+
+                <Button
+                    Text="ECG"
+                    Clicked="ECGButton_Clicked"
+                    HorizontalOptions="Fill"
+                    VerticalOptions="Fill"
+                    FontSize="Body"
+                    IsEnabled="{Binding IsDeviceConnected}"
+                    BackgroundColor="DarkCyan"
+                    CornerRadius="10"
+                    TextColor="White" />
             </StackLayout>
 
             <pages:DeviceStateView

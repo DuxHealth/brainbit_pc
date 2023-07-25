@@ -5,28 +5,21 @@
 <ContentPage
     xmlns="http://xamarin.com/schemas/2014/forms"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:elements="clr-namespace:CallibriDemo.Pages.Elements;assembly=CallibriDemo"
     xmlns:pages="clr-namespace:CallibriDemo.Pages;assembly=CallibriDemo"
-    x:Class="CallibriDemo.Pages.SignalsPage"
-    Title="Signal Demo">
+    xmlns:elements="clr-namespace:CallibriDemo.Pages.Elements;assembly=CallibriDemo"
+    x:Class="CallibriDemo.Pages.SpectrumPage"
+    Title="Spectrum Demo">
 
     <ContentPage.Content>
 
-        <Grid RowDefinitions="0.1*, 0.05*, 0.9*, 40">
-
-            <Button
+        <Grid
+            RowDefinitions="1*,9*,40">
+            
+                <Button
                     Grid.Row="0"
-                    Text="{Binding SignalButtonText}"
-                    Clicked="SignalButton_Clicked"
-                    HorizontalOptions="FillAndExpand"
-                    FontSize="Body"
-                    BackgroundColor="DarkCyan"
-                    CornerRadius="10"
-                    TextColor="White" />
-
-            <Button Grid.Row="1"
-                    Text="Open filters"
-                    Clicked="Filters_Clicked"
+                    Margin="5"
+                    Text="{Binding SpectrumButtonText}"
+                    Clicked="SpectrumButton_OnClicked"
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand"
                     BackgroundColor="DarkCyan"
@@ -34,8 +27,8 @@
                     CornerRadius="10"
                     TextColor="White" />
 
-            <elements:SignalGraph
-                Grid.Row="2"
+            <elements:SpectrumGraph
+                Grid.Row="1"
                 x:Name="Chart"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand" />
@@ -43,7 +36,8 @@
             <pages:DeviceStateView
                 x:Name="DevStateView"
                 BackgroundColor="AliceBlue"
-                Grid.Row="3" />
+                Grid.Column="0"
+                Grid.Row="2" />
         </Grid>
     </ContentPage.Content>
 </ContentPage>

@@ -1,0 +1,39 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8" ?>
+
+<ContentPage
+    xmlns="http://xamarin.com/schemas/2014/forms"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:CallibriDemo.Pages;assembly=CallibriDemo"
+    x:Class="CallibriDemo.Pages.ECGPage"
+    Title="ECG Demo">
+
+    <ContentPage.Content>
+
+        <Grid
+            RowDefinitions="0.1*,*,40">
+
+            <Button Grid.Row="0"
+                    Margin="5"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand"
+                    BackgroundColor="DarkCyan"
+                    FontSize="Body"
+                    CornerRadius="10"
+                    TextColor="White"
+                    Text="{Binding ECGButtonText}"
+                    Clicked="EcgButton_OnClicked" />
+
+            <Label Grid.Row="1"
+                    Text="{Binding EcgStatus}"
+                    TextColor="Black"
+                    FontSize="14" />
+
+            <pages:DeviceStateView
+                x:Name="DevStateView"
+                BackgroundColor="AliceBlue"
+                Grid.Row="2" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
