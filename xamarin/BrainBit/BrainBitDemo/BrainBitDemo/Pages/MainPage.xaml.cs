@@ -52,4 +52,6 @@ public partial class MainPage
 
     private async void ResistanceButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new ResistancePage()); }
     private async void SignalButton_Clicked(object     sender, EventArgs e) { await Navigation.PushAsync(new SignalsPage()); }
+    private async void EmotionButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new EmotionPage()); }
+    private async void SpectrumButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new SpectrumPage()); }
 }
