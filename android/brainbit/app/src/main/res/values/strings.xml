@@ -13,6 +13,11 @@
     <string name="disconnect">Disconnect</string>
     <string name="connect">Connect</string>
 
+    <string name="emotions">Emotions</string>
+    <string name="calibrate">Calibrate</string>
+    <string name="artifacted">Artifacted</string>
+    <string name="not_artifacted">Not Artifacted</string>
+
     <string name="dev_state_title">State: </string>
     <string name="dev_power_title">Power: </string>
 
@@ -20,4 +25,5 @@
     <string name="dev_state_disconnected">Disconnected</string>
     <string name="dev_power_empty">-</string>
     <string name="dev_power_prc">%1$d%%</string>
+    <string name="spectrum">Spectrum</string>
 </resources>

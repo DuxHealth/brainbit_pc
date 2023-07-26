@@ -37,10 +37,26 @@
         <action
             android:id="@+id/action_menuFragment_to_searchFragment"
             app:destination="@id/searchFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_spectrumFragment"
+            app:destination="@id/spectrumFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_emotionsFragment"
+            app:destination="@id/emotionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/resistFragment"
         android:name="com.neurotech.brainbitneurosdkdemo.ui.resist.ResistFragment"
         android:label="Resist Fragment"
         tools:layout="@layout/fragment_resist" />
+    <fragment
+        android:id="@+id/emotionsFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.emotions.EmotionsFragment"
+        android:label="Emotions Fragment"
+        tools:layout="@layout/fragment_emotions" />
+    <fragment
+        android:id="@+id/spectrumFragment"
+        android:name="com.neurotech.brainbitneurosdkdemo.ui.spectrum.SpectrumFragment"
+        android:label="Spectrum Fragment"
+        tools:layout="@layout/fragment_spectrum" />
 </navigation>

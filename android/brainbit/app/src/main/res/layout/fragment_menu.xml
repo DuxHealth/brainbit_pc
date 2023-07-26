@@ -45,6 +45,26 @@
             app:layout_constraintTop_toBottomOf="@+id/button_signal" />
 
         <Button
+            android:id="@+id/button_emotions"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/emotions"
+            android:enabled="@{viewModel.connected}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_resist" />
+
+        <Button
+            android:id="@+id/button_spectrum"
+            android:layout_width="@dimen/button_width"
+            android:layout_height="wrap_content"
+            android:text="@string/spectrum"
+            android:enabled="@{viewModel.connected}"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_emotions" />
+
+        <Button
             android:id="@+id/button_info"
             android:layout_width="@dimen/button_width"
             android:layout_height="wrap_content"
@@ -52,7 +72,7 @@
             android:enabled="@{viewModel.connected}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/button_resist" />
+            app:layout_constraintTop_toBottomOf="@+id/button_spectrum" />
 
         <Button
             android:id="@+id/button_current_reconect"

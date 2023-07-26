@@ -70,6 +70,24 @@ class MenuFragment : Fragment() {
         binding.buttonCurrentReconect.setOnClickListener {
             if(BrainBitController.hasDevice) viewModel.reconnect()
         }
+
+        binding.buttonEmotions.setOnClickListener {
+            if(BrainBitController.connectionState == SensorState.StateInRange){
+                findNavController().navigate(R.id.action_menuFragment_to_emotionsFragment)
+            }
+            else {
+                Toast.makeText(requireActivity(), "Connect to device first!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        binding.buttonSpectrum.setOnClickListener {
+            if(BrainBitController.connectionState == SensorState.StateInRange){
+                findNavController().navigate(R.id.action_menuFragment_to_spectrumFragment)
+            }
+            else {
+                Toast.makeText(requireActivity(), "Connect to device first!", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 
     override fun onResume() {

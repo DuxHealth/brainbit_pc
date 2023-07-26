@@ -31,6 +31,17 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+
+    packagingOptions {
+        pickFirst 'lib/x86_64/libc++_shared.so'
+        pickFirst 'lib/x86_64/libfilters.so'
+        pickFirst 'lib/x86/libc++_shared.so'
+        pickFirst 'lib/x86/libfilters.so'
+        pickFirst 'lib/arm64-v8a/libc++_shared.so'
+        pickFirst 'lib/arm64-v8a/libfilters.so'
+        pickFirst 'lib/armeabi-v7a/libfilters.so'
+        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+    }
     buildFeatures{
         dataBinding = true
         viewBinding = true
@@ -42,14 +53,17 @@ android {
 
 dependencies {
     implementation 'com.github.BrainbitLLC:neurosdk2:1.0.4'
+    implementation 'com.github.BrainbitLLC:Emotional-state-artifacts:1.0.1'
+    implementation 'com.github.BrainbitLLC:SpectrumLib:1.0.0'
+    implementation 'com.github.BrainbitLLC:SignalFilters:1.0'
 
     implementation "com.androidplot:androidplot-core:1.5.10"
 
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.8.0'
+    implementation 'com.google.android.material:material:1.9.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.5.1'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.navigation:navigation-common-ktx:2.5.3'

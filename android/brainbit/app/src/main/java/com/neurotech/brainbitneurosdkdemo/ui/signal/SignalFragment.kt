@@ -12,7 +12,9 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.neurotech.brainbitneurosdkdemo.R
 import com.neurotech.brainbitneurosdkdemo.databinding.SignalFragmentBinding
+import com.neurotech.brainbitneurosdkdemo.filters.FiltersMath
 import com.neurotech.brainbitneurosdkdemo.ui.helpers.PlotHolder
+import com.neurotech.filters.FilterParam
 
 class SignalFragment : Fragment() {
 
@@ -42,6 +44,8 @@ class SignalFragment : Fragment() {
         binding.signalButton.setOnClickListener { viewModel.onSignalClicked() }
 
         initPlots()
+
+        filtersSpinnersImpl()
     }
 
     fun initPlots() {
@@ -73,6 +77,97 @@ class SignalFragment : Fragment() {
             plotT4?.addData(newSamples)
         }
         viewModel.samplesT4.observe(requireActivity(), samplesT4Observer)
+    }
+
+    private fun filtersSpinnersImpl() {
+        val preinstallFilters = FiltersMath()
+
+        val stringComparator = Comparator { o1: String, o2: String ->
+            o1.split('.').first().toInt() - o2.split('.').first().toInt()
+        }
+
+        val lpArr = preinstallFilters.filtersLP.keys.toTypedArray().sortedWith(stringComparator)
+        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr.first()]
+
+        ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_item, lpArr
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.lpSpinner.adapter = it
+            binding.lpSpinner.setSelection(0)
+            binding.lpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    prevLP?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevLP = preinstallFilters.filtersLP[lpArr[position]]
+
+                    preinstallFilters.filtersLP[lpArr[position]]?.let { it2 ->
+                        viewModel.addFilter(it2)
+                    }
+                }
+            }
+        }
+
+        prevLP?.let { viewModel.addFilter(it) }
+
+        val hpArr = preinstallFilters.filtersHP.keys.toTypedArray()
+        var prevHP: FilterParam? = preinstallFilters.filtersHP[lpArr.first()]
+
+        ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_item, hpArr
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.hpSpinner.adapter = it
+            binding.hpSpinner.setSelection(0)
+            binding.hpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    prevHP?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevHP = preinstallFilters.filtersHP[hpArr[position]]
+                    preinstallFilters.filtersHP[hpArr[position]]?.let { it1 ->
+                        viewModel.addFilter(
+                            it1
+                        )
+                    }
+                }
+            }
+        }
+
+        prevHP?.let { viewModel.addFilter(it) }
+
+        val bsArr = preinstallFilters.filtersBS.keys.toTypedArray()
+        var prevBS: FilterParam? = preinstallFilters.filtersBS[lpArr.first()]
+
+        ArrayAdapter(
+            requireContext(), android.R.layout.simple_spinner_item, bsArr
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.bpSpinner.adapter = it
+            binding.bpSpinner.setSelection(0)
+            binding.bpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?, view: View?, position: Int, id: Long
+                ) {
+                    prevBS?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevBS = preinstallFilters.filtersBS[bsArr[position]]
+                    preinstallFilters.filtersBS[bsArr[position]]?.let { it1 ->
+                        viewModel.addFilter(
+                            it1
+                        )
+                    }
+                }
+            }
+        }
+
+        prevBS?.let { viewModel.addFilter(it) }
     }
 
     override fun onDestroyView() {
