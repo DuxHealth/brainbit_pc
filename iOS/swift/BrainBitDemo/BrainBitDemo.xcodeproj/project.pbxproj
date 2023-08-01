@@ -15,6 +15,9 @@
 		673F40C72A21021C009222FE /* CorePlot.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 67A2E1F229A3836200F3F7E8 /* CorePlot.framework */; };
 		673F40C82A21021C009222FE /* CorePlot.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 67A2E1F229A3836200F3F7E8 /* CorePlot.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		673F40CE2A210E6B009222FE /* ObjcEx.m in Sources */ = {isa = PBXBuildFile; fileRef = 673F40CD2A210E6B009222FE /* ObjcEx.m */; };
+		6788E0892A793D6100F38E5D /* EmotionsImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6788E0882A793D6100F38E5D /* EmotionsImpl.swift */; };
+		6788E08B2A79407400F38E5D /* EmotionsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6788E08A2A79407400F38E5D /* EmotionsViewController.swift */; };
+		6788E08D2A79497000F38E5D /* FiltersImpl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6788E08C2A79497000F38E5D /* FiltersImpl.swift */; };
 		67A2E1FA29A385D000F3F7E8 /* SignalGraphView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A2E1F929A385D000F3F7E8 /* SignalGraphView.swift */; };
 		67A2E21329A3A55E00F3F7E8 /* BrainBitController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67A2E21229A3A55E00F3F7E8 /* BrainBitController.swift */; };
 		67E377D5299FBD0A00F889D4 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 67E377D4299FBD0A00F889D4 /* AppDelegate.swift */; };
@@ -51,6 +54,10 @@
 		673F40CB2A210E51009222FE /* ObjcEx.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ObjcEx.h; sourceTree = "<group>"; };
 		673F40CC2A210E6A009222FE /* BrainBitDemo-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "BrainBitDemo-Bridging-Header.h"; sourceTree = "<group>"; };
 		673F40CD2A210E6B009222FE /* ObjcEx.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjcEx.m; sourceTree = "<group>"; };
+		6788E0852A791FB900F38E5D /* em-st-artifacts.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = "em-st-artifacts.xcframework"; path = "frameworks/em-st-artifacts.xcframework"; sourceTree = "<group>"; };
+		6788E0882A793D6100F38E5D /* EmotionsImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionsImpl.swift; sourceTree = "<group>"; };
+		6788E08A2A79407400F38E5D /* EmotionsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmotionsViewController.swift; sourceTree = "<group>"; };
+		6788E08C2A79497000F38E5D /* FiltersImpl.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FiltersImpl.swift; sourceTree = "<group>"; };
 		67A2E1F229A3836200F3F7E8 /* CorePlot.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CorePlot.framework; path = frameworks/CorePlot.framework; sourceTree = "<group>"; };
 		67A2E1F929A385D000F3F7E8 /* SignalGraphView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignalGraphView.swift; sourceTree = "<group>"; };
 		67A2E21229A3A55E00F3F7E8 /* BrainBitController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainBitController.swift; sourceTree = "<group>"; };
@@ -100,6 +107,7 @@
 		67A2E1F129A3836100F3F7E8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				6788E0852A791FB900F38E5D /* em-st-artifacts.xcframework */,
 				67A2E1F229A3836200F3F7E8 /* CorePlot.framework */,
 				5222EE1B9CD7DB30329F4198 /* Pods_BrainBitDemo.framework */,
 			);
@@ -110,6 +118,8 @@
 			isa = PBXGroup;
 			children = (
 				67A2E21229A3A55E00F3F7E8 /* BrainBitController.swift */,
+				6788E0882A793D6100F38E5D /* EmotionsImpl.swift */,
+				6788E08C2A79497000F38E5D /* FiltersImpl.swift */,
 			);
 			path = NeuroImpl;
 			sourceTree = "<group>";
@@ -122,6 +132,7 @@
 				37ADF17329B210CF003EB82A /* SearchViewController.swift */,
 				37ADF17429B210CF003EB82A /* SignalViewController.swift */,
 				6739AE9829A4E1A90051ED2A /* ResistanceController.swift */,
+				6788E08A2A79407400F38E5D /* EmotionsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -288,6 +299,9 @@
 				37ADF17529B210CF003EB82A /* DeviceInfoViewController.swift in Sources */,
 				67E377D7299FBD0A00F889D4 /* SceneDelegate.swift in Sources */,
 				37ADF17629B210CF003EB82A /* MainViewController.swift in Sources */,
+				6788E0892A793D6100F38E5D /* EmotionsImpl.swift in Sources */,
+				6788E08B2A79407400F38E5D /* EmotionsViewController.swift in Sources */,
+				6788E08D2A79497000F38E5D /* FiltersImpl.swift in Sources */,
 				67A2E1FA29A385D000F3F7E8 /* SignalGraphView.swift in Sources */,
 				67A2E21329A3A55E00F3F7E8 /* BrainBitController.swift in Sources */,
 			);
@@ -451,7 +465,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -489,7 +503,7 @@
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

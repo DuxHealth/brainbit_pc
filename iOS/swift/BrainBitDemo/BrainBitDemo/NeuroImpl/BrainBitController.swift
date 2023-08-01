@@ -22,6 +22,8 @@ class BrainbitController{
     var scanner: NTScanner?
 
     func startSearch(sensorsChanged:  @escaping SensorsChangedCallback){
+        disconnectCurrent()
+        closeSensor()
         if(scanner != nil){
             scanner = nil
         }
