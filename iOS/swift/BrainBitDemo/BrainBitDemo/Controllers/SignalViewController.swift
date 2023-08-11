@@ -73,10 +73,10 @@ class SignalViewController: UIViewController {
             BrainbitController.shared.startSignal { [self] data in
                 queue.async(flags: .barrier) { [self] in
                     for sample in data{
-                        o1Samples.append(sample.o1.floatValue * 1e6 as NSNumber)
-                        o2Samples.append(sample.o2.floatValue * 1e6 as NSNumber)
-                        t3Samples.append(sample.t3.floatValue * 1e6 as NSNumber)
-                        t4Samples.append(sample.t4.floatValue * 1e6 as NSNumber)
+                        o1Samples.append(sample.o1.floatValue * 1e3 as NSNumber)
+                        o2Samples.append(sample.o2.floatValue * 1e3 as NSNumber)
+                        t3Samples.append(sample.t3.floatValue * 1e3 as NSNumber)
+                        t4Samples.append(sample.t4.floatValue * 1e3 as NSNumber)
                     }
                     o1Samples = filtersO1Impl?.filter(samples: o1Samples) ?? []
                     o2Samples = filtersO2Impl?.filter(samples: o2Samples) ?? []
@@ -148,7 +148,7 @@ class SignalViewController: UIViewController {
             self.filtersT3Impl?.removeFilter(fParam: self.prevBS)
             self.filtersT4Impl?.removeFilter(fParam: self.prevBS)
             
-            self.prevBS = self.defaultFilters?.filtersBS[self.hpArr[index]] ?? FTFilterParam()
+            self.prevBS = self.defaultFilters?.filtersBS[self.bsArr[index]] ?? FTFilterParam()
             
             self.filtersO1Impl?.addFilter(fParam: self.prevBS)
             self.filtersO2Impl?.addFilter(fParam: self.prevBS)
