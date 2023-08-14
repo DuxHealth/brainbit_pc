@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import CallibriControllerInstance from '../NeuroImpl/CallibriController';
 import { LineChart, Grid } from 'react-native-svg-charts'
-import { CallibriElectrodeState } from 'react-native-neurosdk2';
+import { CallibriElectrodeState, CallibriSignalType } from 'react-native-neurosdk2';
 
 var chartUpdaterId: number
 const window: number = 1000 * 5;
@@ -55,6 +55,7 @@ export default function SignalScreen({ navigation }: NativeStackScreenProps<any>
 
   function startSignal() {
     setIsSignal(!isSignal)
+    CallibriControllerInstance.configureForSignalType(CallibriSignalType.EMG)
     CallibriControllerInstance.electrodeChangedCallback = (state) => {
       setElState(state)
     }

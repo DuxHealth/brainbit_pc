@@ -6,7 +6,7 @@ import CallibriControllerInstance from '../NeuroImpl/CallibriController';
 
 function MainScreen({ navigation }: NativeStackScreenProps<any>) {
 
-  const [connected, setConnected] = useState(SensorState.OutOfRange)
+  const [connected, setConnected] = useState(SensorState.OutRange)
   const [power, setPower] = useState(0)
 
   CallibriControllerInstance.connectionChangedCallback = (state) => {
@@ -35,7 +35,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
         renderItem={
           ({ item }) =>
             <Button
-              disabled={connected === SensorState.OutOfRange}
+              disabled={connected === SensorState.OutRange}
               title={item.key}
               onPress={() => navigation.navigate(item.key)}
             />

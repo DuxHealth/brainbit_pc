@@ -23,6 +23,7 @@ class BrainBitController {
       const result = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,  // for android 12 (api 31+)
       ]);
       if (
         result[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] !=
@@ -32,6 +33,12 @@ class BrainBitController {
       }
       if (
         result[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] !=
+        PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        this.requestPermissionAndroid();
+      }
+      if (
+        result[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] !=
         PermissionsAndroid.RESULTS.GRANTED
       ) {
         this.requestPermissionAndroid();

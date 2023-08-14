@@ -19,9 +19,10 @@ export default function SearchScreen({ navigation }: NativeStackScreenProps<any>
   const [sensorList, setSensorList] = useState(Array<SensorInfo>);
 
   function startSearch() {
-
     setSearching(!searching)
     CallibriControllerInstance.startSearch((sensors) => {
+      console.log("sensors: ")
+      console.info(sensors)
       setSensorList(sensors)
     });
   }

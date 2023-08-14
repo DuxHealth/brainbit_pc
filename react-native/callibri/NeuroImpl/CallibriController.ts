@@ -1,26 +1,4 @@
-import { Scanner, 
-  SensorInfo, 
-  SensorFamily, 
-  CallibriSensor, 
-  SensorState, 
-  SensorCommand, 
-  SensorFeature, 
-  SensorParameter, 
-  SensorParamAccess, 
-  SensorFirmwareMode, 
-  SensorDataOffset, 
-  SensorGain, 
-  SensorSamplingFrequency, 
-  CallibriSignalData, 
-  CallibriEnvelopeData, 
-  CallibriElectrodeState, 
-  CallibriSignalType, 
-  CallibriColorType, 
-  SensorFilter, 
-  SensorADCInput, 
-  SensorGyroscopeSensitivity, 
-  SensorAccelerometerSensitivity, 
-  SensorExternalSwitchInput } from "react-native-neurosdk2";
+import { Scanner, SensorInfo, SensorFamily, CallibriSensor, SensorState, SensorCommand, SensorFeature, SensorParameter, SensorParamAccess, SensorFirmwareMode, SensorDataOffset, SensorGain, SensorSamplingFrequency, CallibriSignalData, CallibriEnvelopeData, CallibriElectrodeState, CallibriSignalType, CallibriColorType, SensorFilter, SensorADCInput, SensorGyroscopeSensitivity, SensorAccelerometerSensitivity, SensorExternalSwitchInput } from "react-native-neurosdk2";
 import { EventSubscription, PermissionsAndroid, Platform } from 'react-native';
 
 let instance: CallibriController;
@@ -44,6 +22,7 @@ class CallibriController {
       const result = await PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,  // for android 12 (api 31+)
       ]);
       if (
         result[PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION] !=
@@ -53,6 +32,12 @@ class CallibriController {
       }
       if (
         result[PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT] !=
+        PermissionsAndroid.RESULTS.GRANTED
+      ) {
+        this.requestPermissionAndroid();
+      }
+      if (
+        result[PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN] !=
         PermissionsAndroid.RESULTS.GRANTED
       ) {
         this.requestPermissionAndroid();
@@ -87,7 +72,7 @@ class CallibriController {
   public batteryCallback: ((battery: number)=>void) | undefined
 
   public get connectionState(): SensorState {
-    return this._sensor === undefined ? SensorState.OutOfRange : this._sensor.getState();
+    return this._sensor === undefined ? SensorState.OutRange : this._sensor.getState();
   }
 
   public get batteryPower(): number {
@@ -98,16 +83,20 @@ class CallibriController {
     return this._sensor === undefined ? SensorSamplingFrequency.FrequencyUnsupported : this._sensor.getSamplingFrequency();
   }
 
+  public configureForSignalType(type: CallibriSignalType) {
+    this._sensor?.setSignalTypeCallibri(type)
+
+    this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
+    this._sensor?.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
+  }
+
   async createAndConnect(info: SensorInfo): Promise<SensorState> {
     return new Promise<SensorState>(async (resolve, reject) => {
       this._scanner?.createSensor(info)
         .then((sensor) => {
           this._sensor = sensor as CallibriSensor
 
-          this._sensor.setSignalTypeCallibri(CallibriSignalType.EMG)
-          this._sensor.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
-
-          this._sensor.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
+          this.configureForSignalType(CallibriSignalType.EMG)
 
           this._sensor.AddConnectionChanged((state) => { 
             if(this.connectionChangedCallback != undefined)
@@ -123,13 +112,13 @@ class CallibriController {
               this.connectionChangedCallback(SensorState.InRange);
           resolve(SensorState.InRange)
         })
-        .catch((ex) => { reject(SensorState.OutOfRange) })
+        .catch((ex) => { reject(SensorState.OutRange) })
     });
   }
 
   async connectCurrent(): Promise<SensorState> {
     return new Promise<SensorState>(async (resolve, reject) => {
-      if(this._sensor?.getState() != SensorState.OutOfRange) {
+      if(this._sensor?.getState() != SensorState.OutRange) {
         resolve(SensorState.InRange)
         return
       }
@@ -137,7 +126,7 @@ class CallibriController {
         .then(() => {
           resolve(SensorState.InRange)
         })
-        .catch((ex) => { reject(SensorState.OutOfRange) })
+        .catch((ex) => { reject(SensorState.OutRange) })
     });
   }
 
@@ -181,7 +170,7 @@ class CallibriController {
   }
 
   get info(): string{
-    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutOfRange) return `Device unreachable!`;
+    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutRange) return `Device unreachable!`;
         var deviceInfo = ``
 
         var features = this._sensor.getFeatures();

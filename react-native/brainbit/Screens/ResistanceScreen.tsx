@@ -21,7 +21,8 @@ export default function ResistanceScreen({navigation} : NativeStackScreenProps<a
     setIsResist(!isResist)
     BBControllerInstance.resistReceivedCallback = (data)=>{
       setResist(data)
-      console.log(data)
+      console.log("resist:")
+      console.info(data)
     }
     BBControllerInstance.startResist();
   }

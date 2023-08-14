@@ -2,6 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Button, FlatList, Text, View } from 'react-native';
 import CallibriControllerInstance from '../NeuroImpl/CallibriController';
+import { CallibriSignalType } from 'react-native-neurosdk2';
 import { Grid, LineChart } from 'react-native-svg-charts';
 
 var chartUpdaterId: number
@@ -52,6 +53,7 @@ export default function EnvelopeScreen({navigation} : NativeStackScreenProps<any
 
   function startEnvelope() {
     setIsEnvelope(!isEnvelope)
+    CallibriControllerInstance.configureForSignalType(CallibriSignalType.EMG)
     CallibriControllerInstance.envelopeReceivedCallback = (data) => {
       data.forEach((sample) => {
         samples.push(sample.Sample * 1e6)

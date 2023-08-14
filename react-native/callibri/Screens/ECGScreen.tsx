@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import CallibriControllerInstance from '../NeuroImpl/CallibriController';
-import { CallibriElectrodeState, SensorSamplingFrequency } from 'react-native-neurosdk2';
+import { CallibriElectrodeState, CallibriSignalType, SensorSamplingFrequency } from 'react-native-neurosdk2';
 import { EcgMath } from 'react-native-ecg-utils';
 
 var ecgMathDataPackSize = -1;
@@ -39,6 +39,7 @@ export default function ECGScreen({ navigation }: NativeStackScreenProps<any>) {
 
   function startSignal() {
     setIsSignal(!isSignal)
+    CallibriControllerInstance.configureForSignalType(CallibriSignalType.ECG)
     CallibriControllerInstance.electrodeChangedCallback = (state) => {
       setElState(state)
     }
