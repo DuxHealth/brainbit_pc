@@ -57,6 +57,8 @@ object CallibriController {
                     try {
                         sensor?.samplingFrequency = SensorSamplingFrequency.FrequencyHz1000
                         sensor?.signalTypeCallibri = CallibriSignalType.ECG
+                        sensor?.hardwareFilters = listOf(SensorFilter.FilterBSFBwhLvl2CutoffFreq45_55Hz,
+                            SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz);
                     } catch (ex: Exception) {
                         ex.printStackTrace()
                     }

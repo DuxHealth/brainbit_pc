@@ -11,8 +11,10 @@ import android.widget.ArrayAdapter
 import androidx.lifecycle.Observer
 import com.neurosdk2.neuro.types.CallibriSignalType
 import com.neurotech.callibrineurosdkdemo.callibri.CallibriController
+import com.neurotech.callibrineurosdkdemo.callibri.FiltersMath
 import com.neurotech.callibrineurosdkdemo.databinding.FragmentSignalBinding
 import com.neurotech.callibrineurosdkdemo.utils.PlotHolder
+import com.neurotech.filters.FilterParam
 
 class SignalFragment : Fragment() {
 
@@ -53,31 +55,92 @@ class SignalFragment : Fragment() {
         }
         viewModel.samples.observe(requireActivity(), samplesObserver)
 
-        signalTypeSpinnerImpl()
+        filtersSpinnersImpl()
     }
 
-    private fun signalTypeSpinnerImpl(){
+    private fun filtersSpinnersImpl(){
+        val preinstallFilters = FiltersMath()
 
+        val lpArr = preinstallFilters.filtersLP.keys.toTypedArray()
+        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr.first()]
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
-            CallibriSignalType.values()
+            lpArr
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            binding.spinner.adapter = it
-            CallibriController.signalType?.index()?.let { it1 -> binding.spinner.setSelection(it1) }
-            binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            binding.spinnerLp.adapter = it
+            binding.spinnerLp.setSelection(0)
+            binding.spinnerLp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
 
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                    if (CallibriController.signalType != CallibriSignalType.indexOf(position)) {
-                        CallibriController.signalType = CallibriSignalType.indexOf(position)
+                    prevLP?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevLP = preinstallFilters.filtersLP[lpArr[position]]
+                    preinstallFilters.filtersLP[lpArr[position]]?.let { it1 ->
+                        viewModel.addFilter(
+                            it1
+                        )
                     }
                 }
-
             }
         }
+        prevLP?.let { viewModel.addFilter(it) }
+
+        val hpArr = preinstallFilters.filtersHP.keys.toTypedArray()
+        var prevHP: FilterParam? = preinstallFilters.filtersHP[lpArr.first()]
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            hpArr
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerHp.adapter = it
+            binding.spinnerHp.setSelection(0)
+            binding.spinnerHp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    prevHP?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevHP = preinstallFilters.filtersHP[hpArr[position]]
+                    preinstallFilters.filtersHP[hpArr[position]]?.let { it1 ->
+                        viewModel.addFilter(
+                            it1
+                        )
+                    }
+                }
+            }
+        }
+        prevHP?.let { viewModel.addFilter(it) }
+
+        val bsArr = preinstallFilters.filtersBS.keys.toTypedArray()
+        var prevBS: FilterParam? = preinstallFilters.filtersBS[lpArr.first()]
+        ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_spinner_item,
+            bsArr
+        ).also {
+            it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            binding.spinnerBs.adapter = it
+            binding.spinnerBs.setSelection(0)
+            binding.spinnerBs.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+                override fun onNothingSelected(parent: AdapterView<*>?) {
+                }
+
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    prevBS?.let { it1 -> viewModel.removeFilter(it1) }
+                    prevBS = preinstallFilters.filtersBS[bsArr[position]]
+                    preinstallFilters.filtersBS[bsArr[position]]?.let { it1 ->
+                        viewModel.addFilter(
+                            it1
+                        )
+                    }
+                }
+            }
+        }
+        prevBS?.let { viewModel.addFilter(it) }
     }
 
     override fun onDestroyView() {

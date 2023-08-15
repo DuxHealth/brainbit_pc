@@ -56,6 +56,28 @@
                     android:enabled="@{viewModel.connected}"
                     android:text="@string/envelope" />
 
+
+                <Button
+                    android:id="@+id/button_emotions"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.connected}"
+                    android:text="@string/emotions" />
+
+                <Button
+                    android:id="@+id/button_spectrum"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.connected}"
+                    android:text="@string/spectrum" />
+
+                <Button
+                    android:id="@+id/button_ecg"
+                    android:layout_width="@dimen/button_width"
+                    android:layout_height="wrap_content"
+                    android:enabled="@{viewModel.connected}"
+                    android:text="@string/ecg" />
+
                 <Button
                     android:id="@+id/button_current_reconect"
                     android:layout_width="@dimen/button_width"

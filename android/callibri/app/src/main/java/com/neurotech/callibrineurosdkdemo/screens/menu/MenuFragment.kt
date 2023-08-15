@@ -73,6 +73,18 @@ class MenuFragment : Fragment() {
             }
         }
 
+        binding.buttonSpectrum.setOnClickListener {
+            findNavController().navigate(R.id.action_MenuFragment_to_spectrumFragment)
+        }
+
+        binding.buttonEcg.setOnClickListener {
+            findNavController().navigate(R.id.action_MenuFragment_to_ECGFragment)
+        }
+
+        binding.buttonEmotions.setOnClickListener {
+            findNavController().navigate(R.id.action_MenuFragment_to_emotionsFragment)
+        }
+
         binding.buttonCurrentReconect.setOnClickListener {
             if(CallibriController.hasDevice) viewModel.reconnect()
         }

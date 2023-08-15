@@ -6,6 +6,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.neurosdk2.neuro.types.CallibriElectrodeState
 import com.neurotech.callibrineurosdkdemo.callibri.CallibriController
+import com.neurotech.callibrineurosdkdemo.callibri.FiltersMath
+import com.neurotech.filters.FilterParam
 
 class SignalViewModel : ViewModel() {
     var started = ObservableBoolean(false)
@@ -15,6 +17,8 @@ class SignalViewModel : ViewModel() {
     }
 
     var electrodesState = ObservableField<String>()
+
+    private var filtersMath = FiltersMath()
     fun onSignalClicked(){
         if(started.get()){
             CallibriController.stopSignal()
@@ -24,7 +28,7 @@ class SignalViewModel : ViewModel() {
             CallibriController.startSignal(signalReceived = {
                 val res = mutableListOf<Double>()
                 for (sample in it) {
-                    res.addAll(sample.samples.toList())
+                    res.addAll(filtersMath.filter(sample.samples).toList())
                 }
                 samples.postValue(res)
             })
@@ -38,6 +42,14 @@ class SignalViewModel : ViewModel() {
             )
         }
         started.set(!started.get())
+    }
+
+    fun addFilter(fParam: FilterParam){
+        filtersMath.addFilter(fParam)
+    }
+
+    fun removeFilter(fParam: FilterParam){
+        filtersMath.removeFilter(fParam)
     }
 
     fun close(){

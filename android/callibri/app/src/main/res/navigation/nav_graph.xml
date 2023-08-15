@@ -22,6 +22,15 @@
         <action
             android:id="@+id/action_MenuFragment_to_SearchFragment"
             app:destination="@id/SearchFragment" />
+        <action
+            android:id="@+id/action_MenuFragment_to_ECGFragment"
+            app:destination="@id/ECGFragment" />
+        <action
+            android:id="@+id/action_MenuFragment_to_spectrumFragment"
+            app:destination="@id/spectrumFragment" />
+        <action
+            android:id="@+id/action_MenuFragment_to_emotionsFragment"
+            app:destination="@id/emotionsFragment" />
     </fragment>
     <fragment
         android:id="@+id/SearchFragment"
@@ -42,4 +51,17 @@
         android:name="com.neurotech.callibrineurosdkdemo.screens.info.InfoFragment"
         android:label="Info"
         tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/ECGFragment"
+        android:name="com.neurotech.callibrineurosdkdemo.screens.ecg.ECGFragment"
+        android:label="ECG" />
+    <fragment
+        android:id="@+id/spectrumFragment"
+        android:name="com.neurotech.callibrineurosdkdemo.screens.spectrum.SpectrumFragment"
+        android:label="Spectrum" />
+    <fragment
+        android:id="@+id/emotionsFragment"
+        android:name="com.neurotech.callibrineurosdkdemo.screens.emotions.EmotionsFragment"
+        android:label="Emotions"
+        tools:layout="@layout/fragment_emotions" />
 </navigation>
