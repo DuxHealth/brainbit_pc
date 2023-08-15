@@ -58,20 +58,20 @@ class EmotionsViewController : UIViewController {
     
     private func showLastMindData() {
         DispatchQueue.main.async { [self] in
-            relaxationLabel.text = String(format: "Relaxation: %.2f %%", emotionsImpl.lastMindData.instRelaxation)
-            attentionLabel.text = String(format: "Attention: %.2f %%", emotionsImpl.lastMindData.instAttention)
-            relRelaxationLabel.text = String(format: "Rel Relaxation: %.4f", emotionsImpl.lastMindData.relRelaxation)
-            relAttentionLabel.text = String(format: "Rel Attention: %.4f", emotionsImpl.lastMindData.relAttention)
+            relaxationLabel.text = "Relaxation: \(emotionsImpl.lastMindData.instRelaxation) %"
+            attentionLabel.text = "Attention: \(emotionsImpl.lastMindData.instAttention) %"
+            relRelaxationLabel.text = "Rel Relaxation: \(emotionsImpl.lastMindData.relRelaxation)"
+            relAttentionLabel.text = "Rel Attention: \(emotionsImpl.lastMindData.relAttention)"
         }
     }
     
     private func showLastSpectralData() {
         DispatchQueue.main.async { [self] in
-            alphaLabel.text = String(format: "Alpha: %.4f", emotionsImpl.lastSpectralData.alpha)
-            betaLabel.text = String(format: "Beta: %.4f", emotionsImpl.lastSpectralData.beta)
-            gammaLabel.text = String(format: "Gamma: %.4f", emotionsImpl.lastSpectralData.gamma)
-            deltaLabel.text = String(format: "Delta: %.4f", emotionsImpl.lastSpectralData.delta)
-            thetaLabel.text = String(format: "Theta: %.4f", emotionsImpl.lastSpectralData.theta)
+            alphaLabel.text = "Alpha: \(emotionsImpl.lastSpectralData.alpha)"
+            betaLabel.text = "Beta: \(emotionsImpl.lastSpectralData.beta)"
+            gammaLabel.text = "Gamma: \(emotionsImpl.lastSpectralData.gamma)"
+            deltaLabel.text = "Delta: \(emotionsImpl.lastSpectralData.delta)"
+            thetaLabel.text = "Theta: \(emotionsImpl.lastSpectralData.theta)"
         }
     }
     
