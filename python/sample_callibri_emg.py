@@ -71,11 +71,19 @@ try:
         sensor.sensorStateChanged = on_sensor_state_changed
         sensor.batteryChanged = on_battery_changed
 
+        # EMG type setting
         sensor.signal_type_callibri = CallibriSignalType.CallibriSignalTypeEMG
+
+        # Frequency setting
         sensor.sampling_frequency = SensorSamplingFrequency.FrequencyHz1000
+
+        # Filter setting
         sensor.hardware_filters = [SensorFilter.FilterLPFBwhLvl2CutoffFreq400H,
                                    SensorFilter.FilterBSFBwhLvl2CutoffFreq55_65Hz,
                                    SensorFilter.FilterHPFBwhLvl2CutoffFreq10Hz]
+
+        # Input type setting
+        sensor.ext_sw_input = SensorExternalSwitchInput.ExtSwInMioElectrodes
 
         if sensor.is_supported_parameter(SensorParameter.ParameterSamplingFrequency):
             print(sensor.sampling_frequency)
@@ -84,7 +92,6 @@ try:
         if sensor.is_supported_parameter(SensorParameter.ParameterOffset):
             print(sensor.data_offset)
         if sensor.is_supported_parameter(SensorParameter.ParameterExternalSwitchState):
-            sensor.ext_sw_input = SensorExternalSwitchInput.ExtSwInMioElectrodes
             print(sensor.ext_sw_input)
 
         sensor.electrodeStateChanged = on_electrodes_state_changed
