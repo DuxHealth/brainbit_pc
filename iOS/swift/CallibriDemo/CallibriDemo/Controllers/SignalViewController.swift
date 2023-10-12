@@ -23,7 +23,7 @@ class SignalViewController: UIViewController {
         signalTypesDropDown.dataSource = signalTypesArr
         signalTypesDropDown.selectRow(at: 2)
 
-        signalView.initGraph(samplingFrequency: CallibriController.shared.samplingFrequency, channelName: "Signal", yMin: -20000.0, yMax: 20000.0)
+        signalView.initGraph(samplingFrequency: CallibriController.shared.samplingFrequency, channelName: "Signal", yMin: -100.0, yMax: 100.0)
         
         timer = Timer.scheduledTimer(timeInterval: 1.0/30.0, target: self, selector: #selector(updateGraph), userInfo: nil, repeats: true)
     }
@@ -41,7 +41,7 @@ class SignalViewController: UIViewController {
                 queue.async(flags: .barrier) { [self] in
                     for pack in data{
                         for sample in pack.samples{
-                            signalSamples.append(sample.floatValue * 1e6 as NSNumber)
+                            signalSamples.append(sample.floatValue * 1e3 as NSNumber)
                         }
                     }
                 }
