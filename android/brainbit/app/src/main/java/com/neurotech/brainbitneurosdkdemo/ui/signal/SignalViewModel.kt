@@ -36,10 +36,10 @@ class SignalViewModel : ViewModel() {
                 val dataT3 = mutableListOf<Double>()
                 val dataT4 = mutableListOf<Double>()
                 for(data in it){
-                    dataO1.add(filtersMath.filter(data.o1))
-                    dataO2.add(filtersMath.filter(data.o2))
-                    dataT3.add(filtersMath.filter(data.t3))
-                    dataT4.add(filtersMath.filter(data.t4))
+                    dataO1.add(filtersMath.filterO1(data.o1))
+                    dataO2.add(filtersMath.filterO2(data.o2))
+                    dataT3.add(filtersMath.filterT3(data.t3))
+                    dataT4.add(filtersMath.filterT4(data.t4))
                 }
                 samplesO1.postValue(dataO1)
                 samplesO2.postValue(dataO2)

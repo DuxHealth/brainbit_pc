@@ -2,6 +2,7 @@ package com.neurotech.brainbitneurosdkdemo.filters
 
 import com.neurotech.filters.*
 import com.neurotech.brainbitneurosdkdemo.neuroimpl.BrainBitController
+import java.lang.Exception
 
 class FiltersMath {
     val filtersLP = mutableMapOf<String, FilterParam>()
@@ -10,7 +11,10 @@ class FiltersMath {
 
     private val preinstalledFilterList = PreinstalledFilterList.get()
     private val tmpFilterList = mutableMapOf<FilterParam, Int>()
-    private val filterList: FilterList = FilterList()
+    private val filterListO1: FilterList = FilterList()
+    private val filterListO2: FilterList = FilterList()
+    private val filterListT3: FilterList = FilterList()
+    private val filterListT4: FilterList = FilterList()
 
     init {
         val brainBitSF = 250
@@ -33,16 +37,41 @@ class FiltersMath {
     }
 
     fun addFilter(fParam: FilterParam) {
-        val filter = Filter(fParam)
-        tmpFilterList[fParam] = filter.id
-        filterList.addFilter(Filter(fParam))
+        try {
+            val filter = Filter(fParam)
+            tmpFilterList[fParam] = filter.id
+            filterListO1.addFilter(Filter(fParam))
+            filterListO2.addFilter(Filter(fParam))
+            filterListT3.addFilter(Filter(fParam))
+            filterListT4.addFilter(Filter(fParam))
+        } catch (ex: Exception){
+
+        }
+
     }
 
     fun removeFilter(fParam: FilterParam) {
-        tmpFilterList[fParam]?.let { filterList.deleteFilter(it) }
+        tmpFilterList[fParam]?.let {
+            filterListO1.deleteFilter(it)
+            filterListO2.deleteFilter(it)
+            filterListT3.deleteFilter(it)
+            filterListT4.deleteFilter(it)
+        }
     }
 
-    fun filter(sample: Double): Double {
-        return filterList.filter(sample)
+    fun filterO1(sample: Double): Double {
+        return filterListO1.filter(sample)
+    }
+
+    fun filterO2(sample: Double): Double {
+        return filterListO2.filter(sample)
+    }
+
+    fun filterT3(sample: Double): Double {
+        return filterListT3.filter(sample)
+    }
+
+    fun filterT4(sample: Double): Double {
+        return filterListT4.filter(sample)
     }
 }
