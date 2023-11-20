@@ -41,54 +41,40 @@ export default function SignalScreen({ navigation }: NativeStackScreenProps<any>
       setPosition(position => {
         let count = O1Samples.length
 
-        var endIndex = count
         let newPositon = position + count
         if(newPositon-window > 0){
-          endIndex = count - (newPositon-window)
           newPositon = newPositon-window
         }
         setO1ChartData(data => {
-          for(let i = 0; i < endIndex; i++){
-            bufferO1[position++] = O1Samples[i]
-          }
-          position = 0
-          for(let i = endIndex; i < count; i++){
-            bufferO1[position++] = O1Samples[i]
-          }
-          O1Samples = new Array<number>()
+          O1Samples.forEach(s => {
+            bufferO1.shift()
+            bufferO1.push(s)
+          });
+          O1Samples = []
           return bufferO1;
         });
         setO2ChartData(data => {
-          for(let i = 0; i < endIndex; i++){
-            bufferO2[position++] = O2Samples[i]
-          }
-          position = 0
-          for(let i = endIndex; i < count; i++){
-            bufferO2[position++] = O2Samples[i]
-          }
-          O2Samples = new Array<number>()
+          O2Samples.forEach(s => {
+            bufferO2.shift()
+            bufferO2.push(s)
+          });
+          O2Samples = []
           return bufferO2;
         });
         setT3ChartData(data => {
-          for(let i = 0; i < endIndex; i++){
-            bufferT3[position++] = T3Samples[i]
-          }
-          position = 0
-          for(let i = endIndex; i < count; i++){
-            bufferT3[position++] = T3Samples[i]
-          }
-          T3Samples = new Array<number>()
+          T3Samples.forEach(s => {
+            bufferT3.shift()
+            bufferT3.push(s)
+          });
+          T3Samples = []
           return bufferT3;
         });
         setT4ChartData(data => {
-          for(let i = 0; i < endIndex; i++){
-            bufferT4[position++] = T4Samples[i]
-          }
-          position = 0
-          for(let i = endIndex; i < count; i++){
-            bufferT4[position++] = T4Samples[i]
-          }
-          T4Samples = new Array<number>()
+          T4Samples.forEach(s => {
+            bufferT4.shift()
+            bufferT4.push(s)
+          });
+          T4Samples = []
           return bufferT4;
         });
         

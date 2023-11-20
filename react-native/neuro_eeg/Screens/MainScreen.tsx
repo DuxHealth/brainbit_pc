@@ -1,7 +1,7 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Button, View, Text, FlatList } from 'react-native';
-import BBControllerInstance from '../NeuroImpl/BrainBitController';
+import NEEGControllerInstance from '../NeuroImpl/NeuroEEGController';
 import { SensorState } from 'react-native-neurosdk2';
 
 function MainScreen({ navigation }: NativeStackScreenProps<any>) {
@@ -9,11 +9,11 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
   const [connected, setConnected] = useState(SensorState.OutOfRange)
   const [power, setPower] = useState(0)
 
-  BBControllerInstance.connectionChangedCallback = (state)=>{
+  NEEGControllerInstance.connectionChangedCallback = (state)=>{
     setConnected(state)
   }
 
-  BBControllerInstance.batteryCallback = (battery)=>{
+  NEEGControllerInstance.batteryCallback = (battery)=>{
     setPower(battery)
   }
 
@@ -30,6 +30,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
           { key: 'Info' },
           { key: 'Signal' },
           { key: 'Resistance' },
+          { key: 'Signal+Resistance' },
         ]}
         renderItem={
           ({ item }) =>

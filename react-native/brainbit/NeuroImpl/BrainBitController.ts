@@ -73,7 +73,7 @@ class BrainBitController {
   public batteryCallback: ((battery: number)=>void) | undefined
 
   public get connectionState(): SensorState {
-    return this._sensor === undefined ? SensorState.OutRange : this._sensor.getState();
+    return this._sensor === undefined ? SensorState.OutOfRange : this._sensor.getState();
   }
 
   public get batteryPower(): number {
@@ -97,13 +97,13 @@ class BrainBitController {
               this.connectionChangedCallback(SensorState.InRange);
           resolve(SensorState.InRange)
         })
-        .catch((ex) => { reject(SensorState.OutRange) })
+        .catch((ex) => { reject(SensorState.OutOfRange) })
     });
   }
 
   async connectCurrent(): Promise<SensorState> {
     return new Promise<SensorState>(async (resolve, reject) => {
-      if(this._sensor?.getState() != SensorState.OutRange) {
+      if(this._sensor?.getState() != SensorState.OutOfRange) {
         resolve(SensorState.InRange)
         return
       }
@@ -111,7 +111,7 @@ class BrainBitController {
         .then(() => {
           resolve(SensorState.InRange)
         })
-        .catch((ex) => { reject(SensorState.OutRange) })
+        .catch((ex) => { reject(SensorState.OutOfRange) })
     });
   }
 
@@ -149,7 +149,7 @@ class BrainBitController {
   }
 
   get info(): string{
-    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutRange) return `Device unreachable!`;
+    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutOfRange) return `Device unreachable!`;
         var deviceInfo = ``
 
         var features = this._sensor.getFeatures();

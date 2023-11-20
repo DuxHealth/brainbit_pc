@@ -1,11 +1,31 @@
-import { Scanner, SensorInfo, SensorFamily, CallibriSensor, SensorState, SensorCommand, SensorFeature, SensorParameter, SensorParamAccess, SensorFirmwareMode, SensorDataOffset, SensorGain, SensorSamplingFrequency, CallibriSignalData, CallibriEnvelopeData, CallibriElectrodeState, CallibriSignalType, CallibriColorType, SensorFilter, SensorADCInput, SensorGyroscopeSensitivity, SensorAccelerometerSensitivity, SensorExternalSwitchInput } from "react-native-neurosdk2";
-import { EventSubscription, PermissionsAndroid, Platform } from 'react-native';
+import { Scanner, 
+  SensorInfo, 
+  SensorFamily, 
+  NeuroEEGSensor, 
+  SensorState, 
+  SensorCommand, 
+  SensorFeature,
+  SensorParameter, 
+  SensorParamAccess, 
+  SensorFirmwareMode, 
+  SensorDataOffset, 
+  SensorGain, 
+  SensorSamplingFrequency, 
+  SignalChannelsData, 
+  ResistChannelsData, 
+  EEGChannelInfo,
+  NeuroEEGAmplifierParam, 
+  EEGRefMode, 
+  EEGChannelMode,
+  SensorAmpMode,
+  EEGChannelType} from "react-native-neurosdk2";
+import { PermissionsAndroid, Platform } from 'react-native';
 
-let instance: CallibriController;
+//let instance: NeuroEEGController;
 
-class CallibriController {
+class NeuroEEGController {
 
-  private static _instance: CallibriController;
+  private static _instance: NeuroEEGController;
 
   private constructor() {
     //...
@@ -45,16 +65,15 @@ class CallibriController {
     } catch (err) {
       console.warn(err);
     }
+
   }
 
   async startSearch(sensorFounded: (sensorFounded: SensorInfo[]) => void): Promise<void> {
 
-    if (this._scanner != undefined) {
-      this._scanner.close()
-      this._scanner = undefined
+    if (this._scanner == undefined) {
+      this._scanner = new Scanner()
+      await this._scanner.init([SensorFamily.LENeuroEEG])
     }
-    this._scanner = new Scanner()
-    await this._scanner.init([SensorFamily.LECallibri, SensorFamily.LEKolibri])
     this._scanner?.AddSensorListChanged(sensorFounded)
     if(Platform.OS != 'ios'){
       await this.requestPermissionAndroid()
@@ -67,47 +86,54 @@ class CallibriController {
     await this._scanner?.stop()
   }
 
-  private _sensor: CallibriSensor | undefined
+  private _sensor: NeuroEEGSensor | undefined
   public connectionChangedCallback: ((state: SensorState)=>void) | undefined
   public batteryCallback: ((battery: number)=>void) | undefined
 
   public get connectionState(): SensorState {
-    return this._sensor === undefined ? SensorState.OutRange : this._sensor.getState();
+    return this._sensor === undefined ? SensorState.OutOfRange : this._sensor.getState();
   }
 
   public get batteryPower(): number {
-    return this._sensor === undefined ? 0 : this._sensor.getState();
+    return this._sensor === undefined ? 0 : this._sensor.getBattPower();
   }
 
-  public get samplingFreq(): SensorSamplingFrequency {
-    return this._sensor === undefined ? SensorSamplingFrequency.FrequencyUnsupported : this._sensor.getSamplingFrequency();
-  }
-
-  public configureForSignalType(type: CallibriSignalType) {
-    this._sensor?.setSignalType(type)
-
-    this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
-    this._sensor?.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
+  public get maxChannelsCount(): number {
+    return NeuroEEGSensor.getMaxChCount();
   }
 
   async createAndConnect(info: SensorInfo): Promise<SensorState> {
     return new Promise<SensorState>(async (resolve, reject) => {
       this._scanner?.createSensor(info)
         .then((sensor) => {
-          this._sensor = sensor as CallibriSensor
+          this._sensor = sensor as NeuroEEGSensor
 
-          this.configureForSignalType(CallibriSignalType.EMG)
+          let ampMode = this._sensor.getAmpMode()
+          console.log
+          if(ampMode !== SensorAmpMode.AmpModeIdle && ampMode !== SensorAmpMode.AmpModePowerDown){
+            this._sensor.execute(SensorCommand.StopSignal)
+            this._sensor.execute(SensorCommand.StopSignalAndResist)
+            this._sensor.execute(SensorCommand.StopResist)
+          }
+
+          let maxChCount = NeuroEEGSensor.getMaxChCount();
+          let ampParam: NeuroEEGAmplifierParam = {
+            ReferentResistMesureAllow: false,
+            Frequency: SensorSamplingFrequency.FrequencyHz250,
+            ReferentMode: EEGRefMode.A1A2,
+            ChannelMode: Array(maxChCount).fill(EEGChannelMode.EEGChannelModeSignalResist),
+            ChannelGain: Array(maxChCount).fill(SensorGain.Gain6)
+          };
+          this._sensor.setAmplifierParam(ampParam)
 
           this._sensor.AddConnectionChanged((state) => { 
             if(this.connectionChangedCallback != undefined)
               this.connectionChangedCallback(state); 
           })
-
           this._sensor.AddBatteryChanged((battery) => { 
             if(this.batteryCallback != undefined)
               this.batteryCallback(battery); 
           })
-
           if(this.connectionChangedCallback != undefined)
               this.connectionChangedCallback(SensorState.InRange);
           resolve(SensorState.InRange)
@@ -134,16 +160,21 @@ class CallibriController {
     await this._sensor?.disconnect()
   }
 
-  public signalReceivedCallback: ((data: Array<CallibriSignalData>)=>void) | undefined
-  public electrodeChangedCallback: ((data: CallibriElectrodeState)=>void) | undefined
-  public envelopeReceivedCallback: ((data: Array<CallibriEnvelopeData>)=>void) | undefined
+  channelsList(): Array<String> {
+    var result = Array(this._sensor?.getChannelsCount()).fill("")
+    this._sensor?.getSupportedChannels()?.forEach((ch)=>{
+      result[ch.Num] = ch.Name
+    })
+
+    return result
+  }
+
+  public signalReceivedCallback: ((data: Array<SignalChannelsData>)=>void) | undefined
+  public resistReceivedCallback: ((data: Array<ResistChannelsData>)=>void) | undefined
+  public signalResistReceivedCallback: ((signalData: Array<SignalChannelsData>, resistData: Array<ResistChannelsData>)=>void) | undefined
 
   async startSignal(){
-    this._sensor?.AddElectrodeStateChanged((state)=>{
-      if(this.electrodeChangedCallback != undefined)
-        this.electrodeChangedCallback(state)
-    })
-    this._sensor?.AddSignalReceived((data)=>{
+    this._sensor?.AddSignalDataReceived((data)=>{
       if(this.signalReceivedCallback != undefined)
         this.signalReceivedCallback(data)
     })
@@ -151,26 +182,39 @@ class CallibriController {
   }
 
   async stopSignal(){
-    this._sensor?.RemoveElectrodeStateChanged()
-    this._sensor?.RemoveSignalReceived()
+    this._sensor?.RemoveSignalDataReceived()
     await this._sensor?.execute(SensorCommand.StopSignal).catch((ex)=> console.log(ex))
   }
 
-  async startEnvelope(){
-    this._sensor?.AddEnvelopeDataChanged((data)=>{
-      if(this.envelopeReceivedCallback != undefined)
-        this.envelopeReceivedCallback(data)
+  async startResist(){
+    this._sensor?.AddResistDataReceived((data)=>{
+      if(this.resistReceivedCallback != undefined)
+        this.resistReceivedCallback(data)
     })
-    await this._sensor?.execute(SensorCommand.StartEnvelope).catch((ex)=> console.log(ex))
+    await this._sensor?.execute(SensorCommand.StartResist).catch((ex)=> console.log(ex))
   }
 
-  async stopEnvelope(){
-    this._sensor?.RemoveEnvelopeDataChanged();
-    await this._sensor?.execute(SensorCommand.StopEnvelope).catch((ex)=> console.log(ex))
+  async stopResist(){
+    this._sensor?.RemoveResistDataReceived();
+    await this._sensor?.execute(SensorCommand.StopResist).catch((ex)=> console.log(ex))
+  }
+
+  async startSignalResist(){
+    this._sensor?.AddSignalResistReceived((signalData, resistData)=>{
+      if(this.signalResistReceivedCallback != undefined){
+        this.signalResistReceivedCallback(signalData, resistData)
+      }
+    })
+    await this._sensor?.execute(SensorCommand.StartSignalAndResist).catch((ex)=> console.log(ex))
+  }
+
+  async stopSignalResist(){
+    this._sensor?.RemoveSignalResistReceived()
+    await this._sensor?.execute(SensorCommand.StopSignalAndResist).catch((ex)=> console.log(ex))
   }
 
   get info(): string{
-    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutRange) return `Device unreachable!`;
+    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutOfRange) return `Device unreachable!`;
         var deviceInfo = ``
 
         var features = this._sensor.getFeatures();
@@ -179,14 +223,18 @@ class CallibriController {
                deviceInfo += ` ${SensorFeature[feature]}\n`
         });
 
+        deviceInfo += '\n';
+
         var commands = this._sensor.getCommands()
-        deviceInfo += `\nCommands:\n`
+        deviceInfo += `Commands:\n`
             commands.forEach(command => {
               deviceInfo += ` ${SensorCommand[command]}\n`
             });
 
+        deviceInfo += '\n';
+
         var parameters = this._sensor.getParameters()
-        deviceInfo += '\nParameters:\n'
+        deviceInfo += 'Parameters:\n'
         parameters.forEach(parameter => { 
           switch(parameter.Param){
             case SensorParameter.Name:
@@ -205,7 +253,7 @@ class CallibriController {
               deviceInfo += ` Firmware mode: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorFirmwareMode[this._sensor === undefined ? 1 : this._sensor.getFirmwareMode()]}\n`
               break;
             case SensorParameter.SamplingFrequency:
-              deviceInfo += ` Sampling frequency: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorSamplingFrequency[this._sensor === undefined ? 10 : this._sensor.getSamplingFrequency()]}\n`
+              deviceInfo += ` Signal frequency: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorSamplingFrequency[this._sensor === undefined ? 10 : this._sensor.getSamplingFrequency()]}\n`
               break;
             case SensorParameter.Gain:
               deviceInfo += `  Gain: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorGain[this._sensor === undefined ? 11 : this._sensor.getGain()]}\n`
@@ -226,33 +274,41 @@ class CallibriController {
             case SensorParameter.SensorFamily:
               deviceInfo += ` Sensor family: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorFamily[this._sensor === undefined ? 0 : this._sensor.getSensFamily()]}\n`
               break;
-            case SensorParameter.ADCInputState:
-              deviceInfo += ` ADC input: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorADCInput[this._sensor === undefined ? 0 : this._sensor.getADCInput()]}\n`
-              break;
-            case SensorParameter.GyroscopeSens:
-              deviceInfo += ` Gyro sensitivity: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorGyroscopeSensitivity[this._sensor === undefined ? 0 : this._sensor.getGyroSens()]}\n`
-              break;
-            case SensorParameter.SamplingFrequencyMEMS:
-              deviceInfo += ` Sampling frequency MEMS: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorSamplingFrequency[this._sensor === undefined ? 0 : this._sensor.getSamplingFrequencyMEMS()]}\n`
-              break;
-            case SensorParameter.AccelerometerSens:
-              deviceInfo += ` Accelerometer sensitivity: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorAccelerometerSensitivity[this._sensor === undefined ? 0 : this._sensor.getAccSens()]}\n`
-              break;
-            case SensorParameter.HardwareFilterState:
-              deviceInfo += ` Hardware filters: (${SensorParamAccess[parameter.ParamAccess]}): ${this._sensor === undefined ? 0 : this._sensor.getHardwareFilters()}\n`
-              break;
-            case SensorParameter.ExternalSwitchState:
-              deviceInfo += ` External switch state: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorExternalSwitchInput[this._sensor === undefined ? 0 : this._sensor.getExtSwInput()]}\n`
+            case SensorParameter.SamplingFrequencyResist:
+              deviceInfo += ` Resist frequency: (${SensorParamAccess[parameter.ParamAccess]}): ${SensorSamplingFrequency[this._sensor === undefined ? 10 : this._sensor.getSamplingFrequencyResist()]}\n`
               break;
           }
         });
 
-        deviceInfo += `\nColor: ${CallibriColorType[this._sensor === undefined ? 4 : this._sensor.getColor()]}\n`
-        deviceInfo += `\Signal type: ${CallibriSignalType[this._sensor === undefined ? 6 : this._sensor.getSignalType()]}\n`
+        deviceInfo += '\n';
+        
+        deviceInfo += `  survey id = ${this._sensor.getSurveyId()}\n`;
+
+        deviceInfo += `  Channel count: ${this._sensor.getChannelsCount()}\n`;
+        deviceInfo += `  Max channel count: ${NeuroEEGSensor.getMaxChCount()}\n`;
+
+        deviceInfo += `  supported channels: [${this._sensor.getSupportedChannels().map((ch, i) => {
+          return `\n   {Id: ${ch.Id}, Num: ${ch.Num}, Name: ${ch.Name}, Type: ${EEGChannelType[ch.ChType]}}`
+        })}\n   ]\n`;
+
+        var ampParams = this._sensor?.getAmplifierParam()
+
+        deviceInfo += `  Amplifier params: \n` + 
+        `   ReferentResistMesureAllow = ${ampParams.ReferentResistMesureAllow}\n` +
+        `   Frequency = ${SensorSamplingFrequency[ampParams.Frequency]}\n` + 
+        `   ReferentMode = ${EEGRefMode[ampParams.ReferentMode]}\n` + 
+        `   ChannelMode = [ ${ampParams.ChannelMode.map((mode, i) => {
+          return `\n      ${i}: ${EEGChannelMode[mode]} `
+        })}\n   ]\n` +
+        `   ChannelGain = [ ${ ampParams.ChannelGain.map((gain, i) => {
+          return `\n      ${i}: ${SensorGain[gain]} `
+        })}\n   ]\n`;
+
+        deviceInfo += '\n';
 
         return deviceInfo
   }
 }
 
-const CallibriControllerInstance = CallibriController.Instance;
-export default CallibriControllerInstance;
+const NEEGControllerInstance = NeuroEEGController.Instance;
+export default NEEGControllerInstance;
