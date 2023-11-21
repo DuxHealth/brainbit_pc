@@ -64,7 +64,7 @@ try:
     nwinsForPressureIndex = 30
     callibri_math = CallibriMath(samplingRate, int(dataWindow), nwinsForPressureIndex)
     callibri_math.init_filter()
-    scanner = Scanner([SensorFamily.SensorLECallibri, SensorFamily.SensorLEKolibri])
+    scanner = Scanner([SensorFamily.LECallibri, SensorFamily.LEKolibri])
 
     scanner.sensorsChanged = sensor_found
     scanner.start()
@@ -91,35 +91,35 @@ try:
         sensor.sensorStateChanged = on_sensor_state_changed
         sensor.batteryChanged = on_battery_changed
 
-        sensor.signal_type_callibri = CallibriSignalType.CallibriSignalTypeECG
+        sensor.signal_type_callibri = CallibriSignalType.ECG
         sensor.sampling_frequency = SensorSamplingFrequency.FrequencyHz1000
-        sensor.hardware_filters = [SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz,
-                                   SensorFilter.FilterBSFBwhLvl2CutoffFreq45_55Hz,
-                                   SensorFilter.FilterBSFBwhLvl2CutoffFreq55_65Hz]
+        sensor.hardware_filters = [SensorFilter.HPFBwhLvl1CutoffFreq1Hz,
+                                   SensorFilter.BSFBwhLvl2CutoffFreq45_55Hz,
+                                   SensorFilter.BSFBwhLvl2CutoffFreq55_65Hz]
 
-        if sensor.is_supported_parameter(SensorParameter.ParameterSamplingFrequency):
+        if sensor.is_supported_parameter(SensorParameter.SamplingFrequency):
             print(sensor.sampling_frequency)
-        if sensor.is_supported_parameter(SensorParameter.ParameterGain):
+        if sensor.is_supported_parameter(SensorParameter.Gain):
             print(sensor.gain)
-        if sensor.is_supported_parameter(SensorParameter.ParameterOffset):
+        if sensor.is_supported_parameter(SensorParameter.Offset):
             print(sensor.data_offset)
-        if sensor.is_supported_parameter(SensorParameter.ParameterExternalSwitchState):
+        if sensor.is_supported_parameter(SensorParameter.ExternalSwitchState):
             print(sensor.ext_sw_input)
 
         sensor.electrodeStateChanged = on_electrodes_state_changed
 
-        if sensor.is_supported_feature(SensorFeature.FeatureSignal):
+        if sensor.is_supported_feature(SensorFeature.Signal):
             sensor.signalDataReceived = on_signal_received
 
-        if sensor.is_supported_command(SensorCommand.CommandStartSignal):
-            sensor.exec_command(SensorCommand.CommandStartSignal)
+        if sensor.is_supported_command(SensorCommand.StartSignal):
+            sensor.exec_command(SensorCommand.StartSignal)
             print("Start ECG calculating")
 
             threading.Thread(target=worker, daemon=True).start()
 
             sleep(60)
             calculations_done = True
-            sensor.exec_command(SensorCommand.CommandStopSignal)
+            sensor.exec_command(SensorCommand.StopSignal)
             print("Stop ECG calculating")
 
         sensor.disconnect()

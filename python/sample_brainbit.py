@@ -39,7 +39,7 @@ def on_amp_received(sensor, data):
 
 
 try:
-    scanner = Scanner([SensorFamily.SensorLEBrainBit, SensorFamily.SensorLEBrainBitBlack])
+    scanner = Scanner([SensorFamily.LEBrainBit, SensorFamily.LEBrainBitBlack])
 
     scanner.sensorsChanged = sensor_found
     scanner.start()
@@ -67,6 +67,12 @@ try:
 
         sensFamily = sensor.sens_family
 
+        sensorState = sensor.state
+        if sensorState == SensorState.StateInRange:
+            print("connected")
+        else:
+            print("Disconnected")
+
         print(sensFamily)
         print(sensor.features)
         print(sensor.commands)
@@ -76,54 +82,54 @@ try:
         print(sensor.address)
         print(sensor.serial_number)
         print(sensor.batt_power)
-        if sensor.is_supported_parameter(SensorParameter.ParameterSamplingFrequency):
+        if sensor.is_supported_parameter(SensorParameter.SamplingFrequency):
             print(sensor.sampling_frequency)
-        if sensor.is_supported_parameter(SensorParameter.ParameterGain):
+        if sensor.is_supported_parameter(SensorParameter.Gain):
             print(sensor.gain)
-        if sensor.is_supported_parameter(SensorParameter.ParameterOffset):
+        if sensor.is_supported_parameter(SensorParameter.Offset):
             print(sensor.data_offset)
         print(sensor.version)
 
         sensor.sensorAmpModeChanged = on_amp_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureSignal):
+        if sensor.is_supported_feature(SensorFeature.Signal):
             sensor.signalDataReceived = on_signal_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureResist):
+        if sensor.is_supported_feature(SensorFeature.Resist):
             sensor.resistDataReceived = on_resist_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureMEMS):
+        if sensor.is_supported_feature(SensorFeature.MEMS):
             sensor.memsDataReceived = on_mems_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureFPG):
+        if sensor.is_supported_feature(SensorFeature.FPG):
             sensor.fpgDataReceived = on_fpg_received
 
-        if sensor.is_supported_command(SensorCommand.CommandStartSignal):
-            sensor.exec_command(SensorCommand.CommandStartSignal)
+        if sensor.is_supported_command(SensorCommand.StartSignal):
+            sensor.exec_command(SensorCommand.StartSignal)
             print("Start signal")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopSignal)
+            sensor.exec_command(SensorCommand.StopSignal)
             print("Stop signal")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartFPG):
-            sensor.exec_command(SensorCommand.CommandStartFPG)
+        if sensor.is_supported_command(SensorCommand.StartFPG):
+            sensor.exec_command(SensorCommand.StartFPG)
             print("Start FPG")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopFPG)
+            sensor.exec_command(SensorCommand.StopFPG)
             print("Stop FPG")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartResist):
-            sensor.exec_command(SensorCommand.CommandStartResist)
+        if sensor.is_supported_command(SensorCommand.StartResist):
+            sensor.exec_command(SensorCommand.StartResist)
             print("Start resist")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopResist)
+            sensor.exec_command(SensorCommand.StopResist)
             print("Stop resist")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartMEMS):
-            sensor.exec_command(SensorCommand.CommandStartMEMS)
+        if sensor.is_supported_command(SensorCommand.StartMEMS):
+            sensor.exec_command(SensorCommand.StartMEMS)
             print("Start MEMS")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopMEMS)
+            sensor.exec_command(SensorCommand.StopMEMS)
             print("Stop MEMS")
 
         sensor.disconnect()

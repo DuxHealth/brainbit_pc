@@ -43,7 +43,7 @@ def on_signal_received(sensor, data):
 
 
 try:
-    scanner = Scanner([SensorFamily.SensorLEBrainBit, SensorFamily.SensorLEBrainBitBlack])
+    scanner = Scanner([SensorFamily.LEBrainBit, SensorFamily.LEBrainBitBlack])
 
     scanner.sensorsChanged = sensor_found
     scanner.start()
@@ -69,7 +69,7 @@ try:
         sensor.sensorStateChanged = on_sensor_state_changed
         sensor.batteryChanged = on_battery_changed
 
-        if sensor.is_supported_feature(SensorFeature.FeatureSignal):
+        if sensor.is_supported_feature(SensorFeature.Signal):
             sensor.signalDataReceived = on_signal_received
 
 
@@ -95,12 +95,12 @@ try:
         math.set_zero_spect_waves(True, 0, 1, 1, 1, 0)
         math.set_spect_normalization_by_bands_width(True)
 
-        if sensor.is_supported_command(SensorCommand.CommandStartSignal):
-            sensor.exec_command(SensorCommand.CommandStartSignal)
+        if sensor.is_supported_command(SensorCommand.StartSignal):
+            sensor.exec_command(SensorCommand.StartSignal)
             print("Start signal")
             math.start_calibration()
             sleep(120)
-            sensor.exec_command(SensorCommand.CommandStopSignal)
+            sensor.exec_command(SensorCommand.StopSignal)
             print("Stop signal")
 
         sensor.disconnect()

@@ -43,7 +43,7 @@ def on_quaternion_received(sensor, data):
 
 
 try:
-    scanner = Scanner([SensorFamily.SensorLECallibri, SensorFamily.SensorLEKolibri])
+    scanner = Scanner([SensorFamily.LECallibri, SensorFamily.LEKolibri])
 
     scanner.sensorsChanged = sensor_found
     scanner.start()
@@ -80,69 +80,68 @@ try:
         print(sensor.address)
         print(sensor.serial_number)
         print(sensor.batt_power)
-        if sensor.is_supported_parameter(SensorParameter.ParameterSamplingFrequency):
-            print(sensor.sampling_frequency)
-        if sensor.is_supported_parameter(SensorParameter.ParameterGain):
-            print(sensor.gain)
-        if sensor.is_supported_parameter(SensorParameter.ParameterOffset):
-            print(sensor.data_offset)
         print(sensor.version)
+        if sensor.is_supported_parameter(SensorParameter.SamplingFrequency):
+            print(sensor.sampling_frequency)
+        if sensor.is_supported_parameter(SensorParameter.Gain):
+            print(sensor.gain)
+        if sensor.is_supported_parameter(SensorParameter.Offset):
+            print(sensor.data_offset)
 
-        sensor.electrodeStateChanged = on_electrodes_state_changed
-
-        if sensor.is_supported_feature(SensorFeature.FeatureSignal):
+        if sensor.is_supported_feature(SensorFeature.Signal):
+            sensor.electrodeStateChanged = on_electrodes_state_changed
             sensor.signalDataReceived = on_signal_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureRespiration):
+        if sensor.is_supported_feature(SensorFeature.Respiration):
             sensor.respirationDataReceived = on_respiration_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureEnvelope):
+        if sensor.is_supported_feature(SensorFeature.Envelope):
             sensor.envelopeDataReceived = on_envelope_received
 
-        if sensor.is_supported_feature(SensorFeature.FeatureMEMS):
+        if sensor.is_supported_feature(SensorFeature.MEMS):
             sensor.memsDataReceived = on_mems_received
             sensor.quaternionDataReceived = on_quaternion_received
 
-        if sensor.is_supported_command(SensorCommand.CommandStartSignal):
-            sensor.exec_command(SensorCommand.CommandStartSignal)
+        if sensor.is_supported_command(SensorCommand.StartSignal):
+            sensor.exec_command(SensorCommand.StartSignal)
             print("Start signal")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopSignal)
+            sensor.exec_command(SensorCommand.StopSignal)
             print("Stop signal")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartEnvelope):
-            sensor.exec_command(SensorCommand.CommandStartEnvelope)
+        if sensor.is_supported_command(SensorCommand.StartEnvelope):
+            sensor.exec_command(SensorCommand.StartEnvelope)
             print("Start envelope")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopEnvelope)
+            sensor.exec_command(SensorCommand.StopEnvelope)
             print("Stop envelope")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartRespiration):
-            sensor.exec_command(SensorCommand.CommandStartRespiration)
+        if sensor.is_supported_command(SensorCommand.StartRespiration):
+            sensor.exec_command(SensorCommand.StartRespiration)
             print("Start respiration")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopRespiration)
+            sensor.exec_command(SensorCommand.StopRespiration)
             print("Stop respiration")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartCurrentStimulation):
-            sensor.exec_command(SensorCommand.CommandStartCurrentStimulation)
+        if sensor.is_supported_command(SensorCommand.StartCurrentStimulation):
+            sensor.exec_command(SensorCommand.StartCurrentStimulation)
             print("Start CurrentStimulation")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopCurrentStimulation)
+            sensor.exec_command(SensorCommand.StopCurrentStimulation)
             print("Stop CurrentStimulation")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartMEMS):
-            sensor.exec_command(SensorCommand.CommandStartMEMS)
+        if sensor.is_supported_command(SensorCommand.StartMEMS):
+            sensor.exec_command(SensorCommand.StartMEMS)
             print("Start MEMS")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopMEMS)
+            sensor.exec_command(SensorCommand.StopMEMS)
             print("Stop MEMS")
 
-        if sensor.is_supported_command(SensorCommand.CommandStartAngle):
-            sensor.exec_command(SensorCommand.CommandStartAngle)
+        if sensor.is_supported_command(SensorCommand.StartAngle):
+            sensor.exec_command(SensorCommand.StartAngle)
             print("Start Quaternion")
             sleep(5)
-            sensor.exec_command(SensorCommand.CommandStopAngle)
+            sensor.exec_command(SensorCommand.StopAngle)
             print("Stop Quaternion")
 
         sensor.disconnect()
