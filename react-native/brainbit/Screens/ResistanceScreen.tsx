@@ -37,10 +37,10 @@ export default function ResistanceScreen({navigation} : NativeStackScreenProps<a
     <View style={{ marginTop: 10 }}>
       <Button title={isResist ? 'Stop' : 'Start'}
         onPress={() => { isResist ? stopResist() : startResist() }} />
-      <Text>{`O1: ${resist?.O1}`}</Text>
-      <Text>{`O2: ${resist?.O2}`}</Text>
-      <Text>{`T3: ${resist?.T3}`}</Text>
-      <Text>{`T4: ${resist?.T4}`}</Text>
+      <Text style={{color: 'black'}}>{`O1: ${resist?.O1}`}</Text>
+      <Text style={{color: 'black'}}>{`O2: ${resist?.O2}`}</Text>
+      <Text style={{color: 'black'}}>{`T3: ${resist?.T3}`}</Text>
+      <Text style={{color: 'black'}}>{`T4: ${resist?.T4}`}</Text>
     </View>
   );
 }

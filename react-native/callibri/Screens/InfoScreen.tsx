@@ -6,7 +6,7 @@ import CallibriControllerInstance from '../NeuroImpl/CallibriController';
 export default function InfoScreen() {
   return (
     <ScrollView>
-      <Text>{CallibriControllerInstance.info}</Text>
+      <Text style={{color: 'black'}}>{CallibriControllerInstance.info}</Text>
     </ScrollView>
   );
 }

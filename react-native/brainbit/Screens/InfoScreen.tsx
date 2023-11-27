@@ -6,7 +6,7 @@ import BBControllerInstance from '../NeuroImpl/BrainBitController';
 export default function InfoScreen() {
   return (
     <ScrollView>
-      <Text>{BBControllerInstance.info}</Text>
+      <Text style={{color: 'black'}}>{BBControllerInstance.info}</Text>
     </ScrollView>
   );
 }
