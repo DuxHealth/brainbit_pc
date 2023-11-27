@@ -72,7 +72,7 @@ class CallibriController {
   public batteryCallback: ((battery: number)=>void) | undefined
 
   public get connectionState(): SensorState {
-    return this._sensor === undefined ? SensorState.OutRange : this._sensor.getState();
+    return this._sensor === undefined ? SensorState.OutOfRange : this._sensor.getState();
   }
 
   public get batteryPower(): number {
@@ -85,9 +85,24 @@ class CallibriController {
 
   public configureForSignalType(type: CallibriSignalType) {
     this._sensor?.setSignalType(type)
-
-    this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
-    this._sensor?.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
+    switch(type){
+      case CallibriSignalType.EEG:
+        break;
+      case CallibriSignalType.ECG:
+      case CallibriSignalType.EMG:
+        this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
+        this._sensor?.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
+        break;
+      case CallibriSignalType.EDA:
+        this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz250)
+        this._sensor?.setExtSwInput(SensorExternalSwitchInput.ExtSwInUSB)
+        break;
+      case CallibriSignalType.ImpedanceBreathing:
+        break;
+      case CallibriSignalType.StrainGaugeBreathing:
+        break;
+    }
+    
   }
 
   async createAndConnect(info: SensorInfo): Promise<SensorState> {
@@ -170,7 +185,7 @@ class CallibriController {
   }
 
   get info(): string{
-    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutRange) return `Device unreachable!`;
+    if (this._sensor === undefined || this._sensor.getState() == SensorState.OutOfRange) return `Device unreachable!`;
         var deviceInfo = ``
 
         var features = this._sensor.getFeatures();
