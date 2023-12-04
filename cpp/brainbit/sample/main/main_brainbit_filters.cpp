@@ -1,4 +1,4 @@
-#include "main_brainbit_em_st_artifacts.h"
+#include "main_brainbit_filters.h"
 
 void SampleBrainBitFilters(Sensor* sensor_brainbit)
 {
