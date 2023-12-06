@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import EmStArtifacts
 
 class EmotionsViewController : UIViewController {
     
@@ -50,39 +51,35 @@ class EmotionsViewController : UIViewController {
         isStarted = !isStarted;
     }
     
-    private func showCalibrationProgress(_ progress: Int32) {
+    private func showCalibrationProgress(_ progress: UInt32) {
         DispatchQueue.main.async { [self] in
             calibrationLabel.text = String(format: "%d", progress)
         }
     }
     
-    private func showLastMindData() {
+    private func showLastMindData(mindData: EMMindData) {
         DispatchQueue.main.async { [self] in
-            relaxationLabel.text = "Relaxation: \(emotionsImpl.lastMindData.instRelaxation) %"
-            attentionLabel.text = "Attention: \(emotionsImpl.lastMindData.instAttention) %"
-            relRelaxationLabel.text = "Rel Relaxation: \(emotionsImpl.lastMindData.relRelaxation)"
-            relAttentionLabel.text = "Rel Attention: \(emotionsImpl.lastMindData.relAttention)"
+            relaxationLabel.text = "Relaxation: \(mindData.instRelaxation) %"
+            attentionLabel.text = "Attention: \(mindData.instAttention) %"
+            relRelaxationLabel.text = "Rel Relaxation: \(mindData.relRelaxation)"
+            relAttentionLabel.text = "Rel Attention: \(mindData.relAttention)"
         }
     }
     
-    private func showLastSpectralData() {
+    private func showLastSpectralData(spectralData: EMSpectralDataPercents) {
         DispatchQueue.main.async { [self] in
-            alphaLabel.text = "Alpha: \(emotionsImpl.lastSpectralData.alpha)"
-            betaLabel.text = "Beta: \(emotionsImpl.lastSpectralData.beta)"
-            gammaLabel.text = "Gamma: \(emotionsImpl.lastSpectralData.gamma)"
-            deltaLabel.text = "Delta: \(emotionsImpl.lastSpectralData.delta)"
-            thetaLabel.text = "Theta: \(emotionsImpl.lastSpectralData.theta)"
+            print("Alpha: \(spectralData.alpha) Beta: \(spectralData.beta) Gamma: \(spectralData.gamma) Delta: \(spectralData.delta) Theta: \(spectralData.theta)")
+            alphaLabel.text = "Alpha: \(spectralData.alpha)"
+            betaLabel.text = "Beta: \(spectralData.beta)"
+            gammaLabel.text = "Gamma: \(spectralData.gamma)"
+            deltaLabel.text = "Delta: \(spectralData.delta)"
+            thetaLabel.text = "Theta: \(spectralData.theta)"
         }
     }
     
-    private func showIsArtifacted() {
+    private func showIsArtifacted(artifacted: Bool) {
         DispatchQueue.main.async { [self] in
-            if (emotionsImpl.isArtifacted) {
-                isArtifactedLabel.text = "Is Artifacted"
-            }
-            else {
-                isArtifactedLabel.text = "Not Artifacted"
-            }
+            isArtifactedLabel.text = artifacted ? "Is Artifacted" : "Not Artifacted"
         }
     }
 }

@@ -83,8 +83,8 @@ class SignalGraphView: CPTGraphHostingView, CPTPlotDataSource, CPTPlotSpaceDeleg
         // Set plot space
         let xMin = 0.0
         let xMax = maxDataPoints
-        let yMin = -100.0
-        let yMax =  100.0
+        let yMin = -1.0
+        let yMax =  1.0
         guard let plotSpace = graph.defaultPlotSpace as? CPTXYPlotSpace else { return }
         plotSpace.xRange = CPTPlotRange(locationDecimal: CPTDecimalFromDouble(xMin), lengthDecimal: CPTDecimalFromDouble(Double(xMax) - xMin))
         plotSpace.yRange = CPTPlotRange(locationDecimal: CPTDecimalFromDouble(yMin), lengthDecimal: CPTDecimalFromDouble(yMax - yMin))

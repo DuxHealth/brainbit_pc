@@ -14,8 +14,10 @@ class MainViewController: UIViewController {
     @IBOutlet weak var DeviceInfoButton: UIButton!
     @IBOutlet weak var SignalButton: UIButton!
     @IBOutlet weak var ResistanceButton: UIButton!
+    @IBOutlet weak var SpectrumButton: UIButton!
     @IBOutlet weak var EmotionsButton: UIButton!
     
+    @IBOutlet weak var MonopolarEmotions: UIButton!
     @IBOutlet weak var PowerLabel: UIBarButtonItem!
     @IBOutlet weak var StateLabel: UIBarButtonItem!
         
@@ -52,6 +54,8 @@ class MainViewController: UIViewController {
                 self.SignalButton.isEnabled = true
                 self.ResistanceButton.isEnabled = true
                 self.EmotionsButton.isEnabled = true
+                self.SpectrumButton.isEnabled = true
+                self.MonopolarEmotions.isEnabled = true
                 self.StateLabel.title = "Connected"
                 break
             case .outOfRange:
@@ -59,6 +63,8 @@ class MainViewController: UIViewController {
                 self.SignalButton.isEnabled = false
                 self.ResistanceButton.isEnabled = false
                 self.EmotionsButton.isEnabled = false
+                self.SpectrumButton.isEnabled = false
+                self.MonopolarEmotions.isEnabled = false
                 self.StateLabel.title = "Disconnected"
                 self.PowerLabel.title = "0"
                 break

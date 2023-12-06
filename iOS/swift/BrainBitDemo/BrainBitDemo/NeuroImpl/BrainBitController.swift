@@ -115,7 +115,7 @@ class BrainbitController{
             case .gain:
                 result += "\n\t\tValue: \(gainToString(gain: sensor?.gain ?? .gainUnsupported))"
             case .offset:
-                result += "\n\t\tValue: \(String(describing: sensor?.dataOffset))"
+                result += "\n\t\tValue: \((sensor?.dataOffset)!)"
             case .firmwareVersion:
                 let version = sensor?.version
                 result += "\n\t\tFW version: \(version?.fwMajor ?? 0).\(version?.fwMinor ?? 0).\(version?.fwPatch ?? 0)"
@@ -126,7 +126,7 @@ class BrainbitController{
             case .sensorFamily:
                 result += "\n\t\tValue: \(sensor?.sensFamily ?? .leBrainBit)"
             case .sensorMode:
-                result += "\n\t\tValue: \(sensor?.firmwareMode ?? .none)"
+                result += "\n\t\tValue: \((sensor?.firmwareMode)!)"
             case .hardwareFilterState, .externalSwitchState, .adcInputState, .accelerometerSens, .gyroscopeSens, .stimulatorAndMAState, .stimulatorParamPack, .stimulatorAndMAState, .motionAssistantParamPack, .memsCalibrationStatus, .motionCounterParamPack, .motionCounter, .irAmplitude, .redAmplitude, .envelopeAvgWndSz, .envelopeDecimation, .samplingFrequencyResist, .samplingFrequencyMEMS, .samplingFrequencyFPG, .amplifier, .sensorChannels: break
             @unknown default:
                 break
@@ -353,8 +353,6 @@ class BrainbitController{
             return "gain8"
         case .gain12:
             return "gain12"
-        case .gain24:
-            return "gain24"
         case .gainUnsupported:
             return "unsupported"
         @unknown default:

@@ -51,7 +51,7 @@ class SignalViewController: UIViewController {
         hpArr = defaultFilters?.filtersHP.map { $0.key } ?? []
         prevHP = defaultFilters?.filtersHP[hpArr.first ?? ""] ?? FTFilterParam()
         HPdropDown.dataSource = hpArr
-        LPdropDown.selectRow(at: 0)
+        HPdropDown.selectRow(at: 0)
         
         bsArr = defaultFilters?.filtersBS.map { $0.key } ?? []
         prevBS = defaultFilters?.filtersBS[bsArr.first ?? ""] ?? FTFilterParam()
@@ -73,10 +73,10 @@ class SignalViewController: UIViewController {
             BrainbitController.shared.startSignal { [self] data in
                 queue.async(flags: .barrier) { [self] in
                     for sample in data{
-                        o1Samples.append(sample.o1.floatValue * 1e3 as NSNumber)
-                        o2Samples.append(sample.o2.floatValue * 1e3 as NSNumber)
-                        t3Samples.append(sample.t3.floatValue * 1e3 as NSNumber)
-                        t4Samples.append(sample.t4.floatValue * 1e3 as NSNumber)
+                        o1Samples.append(sample.o1.floatValue/* * 1e3*/ as NSNumber)
+                        o2Samples.append(sample.o2.floatValue/* * 1e3*/ as NSNumber)
+                        t3Samples.append(sample.t3.floatValue/* * 1e3*/ as NSNumber)
+                        t4Samples.append(sample.t4.floatValue/* * 1e3*/ as NSNumber)
                     }
                     o1Samples = filtersO1Impl?.filter(samples: o1Samples) ?? []
                     o2Samples = filtersO2Impl?.filter(samples: o2Samples) ?? []
