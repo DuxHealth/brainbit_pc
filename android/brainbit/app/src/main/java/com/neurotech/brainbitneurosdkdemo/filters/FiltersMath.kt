@@ -10,11 +10,10 @@ class FiltersMath {
     val filtersBS = mutableMapOf<String, FilterParam>()
 
     private val preinstalledFilterList = PreinstalledFilterList.get()
-    private val tmpFilterList = mutableMapOf<FilterParam, Int>()
-    private val filterListO1: FilterList = FilterList()
-    private val filterListO2: FilterList = FilterList()
-    private val filterListT3: FilterList = FilterList()
-    private val filterListT4: FilterList = FilterList()
+    private val filterListO1 = mutableMapOf<FilterParam, Filter>()
+    private val filterListO2 = mutableMapOf<FilterParam, Filter>()
+    private val filterListT3 = mutableMapOf<FilterParam, Filter>()
+    private val filterListT4 = mutableMapOf<FilterParam, Filter>()
 
     init {
         val brainBitSF = 250
@@ -38,12 +37,10 @@ class FiltersMath {
 
     fun addFilter(fParam: FilterParam) {
         try {
-            val filter = Filter(fParam)
-            tmpFilterList[fParam] = filter.id
-            filterListO1.addFilter(Filter(fParam))
-            filterListO2.addFilter(Filter(fParam))
-            filterListT3.addFilter(Filter(fParam))
-            filterListT4.addFilter(Filter(fParam))
+            filterListO1[fParam] = Filter(fParam)
+            filterListO2[fParam] = Filter(fParam)
+            filterListT3[fParam] = Filter(fParam)
+            filterListT4[fParam] = Filter(fParam)
         } catch (ex: Exception){
 
         }
@@ -51,27 +48,41 @@ class FiltersMath {
     }
 
     fun removeFilter(fParam: FilterParam) {
-        tmpFilterList[fParam]?.let {
-            filterListO1.deleteFilter(it)
-            filterListO2.deleteFilter(it)
-            filterListT3.deleteFilter(it)
-            filterListT4.deleteFilter(it)
-        }
+        filterListO1.remove(fParam)
+        filterListO2.remove(fParam)
+        filterListT3.remove(fParam)
+        filterListT4.remove(fParam)
     }
 
     fun filterO1(sample: Double): Double {
-        return filterListO1.filter(sample)
+        var result = sample
+        filterListO1.forEach { entry ->
+            result = entry.value.filter(result)
+        }
+        return result
     }
 
     fun filterO2(sample: Double): Double {
-        return filterListO2.filter(sample)
+        var result = sample
+        filterListO2.forEach { entry ->
+            result = entry.value.filter(result)
+        }
+        return result
     }
 
     fun filterT3(sample: Double): Double {
-        return filterListT3.filter(sample)
+        var result = sample
+        filterListT3.forEach { entry ->
+            result = entry.value.filter(result)
+        }
+        return result
     }
 
     fun filterT4(sample: Double): Double {
-        return filterListT4.filter(sample)
+        var result = sample
+        filterListT4.forEach { entry ->
+            result = entry.value.filter(result)
+        }
+        return result
     }
 }

@@ -24,6 +24,9 @@ object BrainBitController {
             else{
                 sensorsChanged(scanner!!, scanner!!.sensors)
             }
+
+            disconnectCurrent()
+
             scanner!!.sensorsChanged = Scanner.ScannerCallback(sensorsChanged)
             scanner!!.start()
         }catch (ex: Exception){

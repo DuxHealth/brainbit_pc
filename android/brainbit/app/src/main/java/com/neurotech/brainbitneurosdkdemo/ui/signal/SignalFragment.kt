@@ -87,14 +87,14 @@ class SignalFragment : Fragment() {
         }
 
         val lpArr = preinstallFilters.filtersLP.keys.toTypedArray().sortedWith(stringComparator)
-        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr.first()]
+        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr[12]]
 
         ArrayAdapter(
             requireContext(), android.R.layout.simple_spinner_item, lpArr
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.lpSpinner.adapter = it
-            binding.lpSpinner.setSelection(0)
+            binding.lpSpinner.setSelection(12)
             binding.lpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -114,14 +114,14 @@ class SignalFragment : Fragment() {
         prevLP?.let { viewModel.addFilter(it) }
 
         val hpArr = preinstallFilters.filtersHP.keys.toTypedArray()
-        var prevHP: FilterParam? = preinstallFilters.filtersHP[lpArr.first()]
+        var prevHP: FilterParam? = preinstallFilters.filtersHP[hpArr[4]]
 
         ArrayAdapter(
             requireContext(), android.R.layout.simple_spinner_item, hpArr
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.hpSpinner.adapter = it
-            binding.hpSpinner.setSelection(0)
+            binding.hpSpinner.setSelection(4)
             binding.hpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -142,14 +142,14 @@ class SignalFragment : Fragment() {
         prevHP?.let { viewModel.addFilter(it) }
 
         val bsArr = preinstallFilters.filtersBS.keys.toTypedArray()
-        var prevBS: FilterParam? = preinstallFilters.filtersBS[lpArr.first()]
+        var prevBS: FilterParam? = preinstallFilters.filtersBS[bsArr[1]]
 
         ArrayAdapter(
             requireContext(), android.R.layout.simple_spinner_item, bsArr
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.bpSpinner.adapter = it
-            binding.bpSpinner.setSelection(0)
+            binding.bpSpinner.setSelection(1)
             binding.bpSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
 
