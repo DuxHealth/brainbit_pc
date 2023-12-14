@@ -40,7 +40,7 @@ class SpectrumController(samplingRate: Int) {
 
             spectrumMath.setNewSampleSize()
 
-            if(rawSpectrumData.size > 0){
+            if(rawSpectrumData.isNotEmpty()){
                 processedSpectrum(rawSpectrumData)
             }
             processedWaves(wavesSpectrumData)

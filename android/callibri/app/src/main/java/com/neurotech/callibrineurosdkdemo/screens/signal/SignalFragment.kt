@@ -61,8 +61,12 @@ class SignalFragment : Fragment() {
     private fun filtersSpinnersImpl(){
         val preinstallFilters = FiltersMath()
 
-        val lpArr = preinstallFilters.filtersLP.keys.toTypedArray()
-        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr.first()]
+        val stringComparator = Comparator { first: String, second: String ->
+            first.split('.').first().toInt() - second.split('.').first().toInt()
+        }
+
+        val lpArr = preinstallFilters.filtersLP.keys.toTypedArray().sortedWith(stringComparator)
+        var prevLP: FilterParam? = preinstallFilters.filtersLP[lpArr[10]]
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -70,7 +74,7 @@ class SignalFragment : Fragment() {
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerLp.adapter = it
-            binding.spinnerLp.setSelection(0)
+            binding.spinnerLp.setSelection(10)
             binding.spinnerLp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
@@ -88,8 +92,8 @@ class SignalFragment : Fragment() {
         }
         prevLP?.let { viewModel.addFilter(it) }
 
-        val hpArr = preinstallFilters.filtersHP.keys.toTypedArray()
-        var prevHP: FilterParam? = preinstallFilters.filtersHP[lpArr.first()]
+        val hpArr = preinstallFilters.filtersHP.keys.toTypedArray().sortedWith(stringComparator)
+        var prevHP: FilterParam? = preinstallFilters.filtersHP[hpArr[5]]
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,
@@ -97,7 +101,7 @@ class SignalFragment : Fragment() {
         ).also {
             it.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             binding.spinnerHp.adapter = it
-            binding.spinnerHp.setSelection(0)
+            binding.spinnerHp.setSelection(5)
             binding.spinnerHp.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
                 override fun onNothingSelected(parent: AdapterView<*>?) {
                 }
@@ -115,8 +119,9 @@ class SignalFragment : Fragment() {
         }
         prevHP?.let { viewModel.addFilter(it) }
 
-        val bsArr = preinstallFilters.filtersBS.keys.toTypedArray()
-        var prevBS: FilterParam? = preinstallFilters.filtersBS[lpArr.first()]
+        val bsArr = preinstallFilters.filtersBS.keys.toTypedArray().sortedWith(stringComparator)
+        if(bsArr.isEmpty()) return
+        var prevBS: FilterParam? = preinstallFilters.filtersBS[bsArr.first()]
         ArrayAdapter(
             requireContext(),
             android.R.layout.simple_spinner_item,

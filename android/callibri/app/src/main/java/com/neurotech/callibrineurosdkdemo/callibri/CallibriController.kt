@@ -56,7 +56,7 @@ object CallibriController {
 
                     try {
                         sensor?.samplingFrequency = SensorSamplingFrequency.FrequencyHz1000
-                        sensor?.signalTypeCallibri = CallibriSignalType.ECG
+                        sensor?.signalType = CallibriSignalType.ECG
                         sensor?.hardwareFilters = listOf(SensorFilter.FilterBSFBwhLvl2CutoffFreq45_55Hz,
                             SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz);
                     } catch (ex: Exception) {
@@ -150,47 +150,40 @@ object CallibriController {
                     SensorParameter.ParameterAccelerometerSens -> append("\n\t\tValue: ${sensor?.accSens}")
                     SensorParameter.ParameterGyroscopeSens -> append("\n\t\tValue: ${sensor?.gyroSens}")
                     SensorParameter.ParameterStimulatorAndMAState -> {
-                        append("\n\t\tStimulator state: ${sensor?.stimulatorMAStateCallibri?.stimulatorState}")
-                        append("\n\t\tMA state: ${sensor?.stimulatorMAStateCallibri?.maState}")
+                        append("\n\t\tStimulator state: ${sensor?.stimulatorMAState?.stimulatorState}")
+                        append("\n\t\tMA state: ${sensor?.stimulatorMAState?.maState}")
                     }
                     SensorParameter.ParameterStimulatorParamPack -> {
-                        append("\n\t\tCurrent: ${sensor?.stimulatorParamCallibri?.current}")
-                        append("\n\t\tFrequency: ${sensor?.stimulatorParamCallibri?.frequency}")
-                        append("\n\t\tPulse width: ${sensor?.stimulatorParamCallibri?.pulseWidth}")
-                        append("\n\t\tStimulus duration: ${sensor?.stimulatorParamCallibri?.stimulusDuration}")
+                        append("\n\t\tCurrent: ${sensor?.stimulatorParam?.current}")
+                        append("\n\t\tFrequency: ${sensor?.stimulatorParam?.frequency}")
+                        append("\n\t\tPulse width: ${sensor?.stimulatorParam?.pulseWidth}")
+                        append("\n\t\tStimulus duration: ${sensor?.stimulatorParam?.stimulusDuration}")
                     }
                     SensorParameter.ParameterMotionAssistantParamPack -> {
-                        append("\n\t\tGyro start: ${sensor?.motionAssistantParamCallibri?.gyroStart}")
-                        append("\n\t\tGyro stop: ${sensor?.motionAssistantParamCallibri?.gyroStop}")
-                        append("\n\t\tLimb: ${sensor?.motionAssistantParamCallibri?.limb}")
-                        append("\n\t\tMin pause (in ms): ${sensor?.motionAssistantParamCallibri?.minPauseMs}")
+                        append("\n\t\tGyro start: ${sensor?.motionAssistantParam?.gyroStart}")
+                        append("\n\t\tGyro stop: ${sensor?.motionAssistantParam?.gyroStop}")
+                        append("\n\t\tLimb: ${sensor?.motionAssistantParam?.limb}")
+                        append("\n\t\tMin pause (in ms): ${sensor?.motionAssistantParam?.minPauseMs}")
                     }
                     SensorParameter.ParameterFirmwareVersion -> {
                         append("\n\t\tFW version: ${sensor?.version?.fwMajor}.${sensor?.version?.fwMinor}.${sensor?.version?.fwPatch}")
                         append("\n\t\tHW version: ${sensor?.version?.hwMajor}.${sensor?.version?.hwMinor}.${sensor?.version?.hwPatch}")
                         append("\n\t\tExtension: ${sensor?.version?.extMajor}")
                     }
-                    SensorParameter.ParameterMEMSCalibrationStatus -> append("\n  Value: ${sensor?.memsCalibrateStateCallibri}")
+                    SensorParameter.ParameterMEMSCalibrationStatus -> append("\n  Value: ${sensor?.memsCalibrateState}")
                     SensorParameter.ParameterMotionCounterParamPack -> {
-                        append("\n\t\tInsense threshold MG: ${sensor?.motionCounterParamCallibri?.insenseThresholdMG}")
-                        append("\n\t\tInsense threshold sample: ${sensor?.motionCounterParamCallibri?.insenseThresholdSample}")
+                        append("\n\t\tInsense threshold MG: ${sensor?.motionCounterParam?.insenseThresholdMG}")
+                        append("\n\t\tInsense threshold sample: ${sensor?.motionCounterParam?.insenseThresholdSample}")
                     }
                     SensorParameter.ParameterMotionCounter -> {
-                        append("\n\t\tInsense threshold MG: ${sensor?.motionCounterCallibri}")
-                        append("\n\t\tInsense threshold sample: ${sensor?.motionCounterParamCallibri?.insenseThresholdSample}")
+                        append("\n\t\tInsense threshold MG: ${sensor?.motionCounter}")
+                        append("\n\t\tInsense threshold sample: ${sensor?.motionCounterParam?.insenseThresholdSample}")
                     }
                     SensorParameter.ParameterBattPower -> append("\n\t\tValue: ${sensor?.battPower}")
                     SensorParameter.ParameterSensorFamily -> append("\n\t\tValue: ${sensor?.sensFamily}")
                     SensorParameter.ParameterSensorMode -> append("\n\t\tValue: ${sensor?.firmwareMode}")
-//                    SensorParameter.ParameterEnvelopeAvgWndSz -> {
-//
-//                    }
-//                    SensorParameter.ParameterEnvelopeDecimation -> TODO()
-//                    SensorParameter.ParameterSamplingFrequencyMEMS -> {
-//
-//                    }
                     SensorParameter.ParameterSensorChannels -> append("\n\t\tValue: ${sensor?.channelsCount}")
-                    SensorParameter.ParameterSamplingFrequencyResp -> append("\n\t\tValue: ${sensor?.samplingFrequencyRespSensor}")
+                    SensorParameter.ParameterSamplingFrequencyResp -> append("\n\t\tValue: ${sensor?.samplingFrequencyResp}")
                     SensorParameter.ParameterName -> append("\n\t\tValue: ${sensor?.name}")
                     SensorParameter.ParameterState -> append("\n\t\tValue: ${sensor?.state}")
                     SensorParameter.ParameterAddress -> append("\n\t\tValue: ${sensor?.address}")
@@ -199,10 +192,10 @@ object CallibriController {
                 }
             }
 
-            append("\tColor: ${sensor?.colorCallibri}")
+            append("\tColor: ${sensor?.color}")
 
             if (sensor?.isSupportedFeature(SensorFeature.Signal) == true) {
-                append("\nSignal type: \n\t${sensor?.signalTypeCallibri}")
+                append("\nSignal type: \n\t${sensor?.signalType}")
             }
 
             append("\n\nCommands: ")
@@ -220,9 +213,9 @@ object CallibriController {
     }
 
     var signalType
-        get() = sensor?.signalTypeCallibri
+        get() = sensor?.signalType
         set(value) {
-            sensor?.signalTypeCallibri = value
+            sensor?.signalType = value
         }
     //</editor-fold>
 
