@@ -20,11 +20,12 @@ public class EmotionsController
 
         var mls = new MathLibSetting
         {
-            sampling_rate        = BrainBitController.Instance.SamplingFrequency,
+            sampling_rate        = (uint)BrainBitController.Instance.SamplingFrequency,
             process_win_freq     = 25,
+            fft_window = (uint)BrainBitController.Instance.SamplingFrequency * 2,
             n_first_sec_skipped  = 6,
-            fft_window           = BrainBitController.Instance.SamplingFrequency * 2,
             bipolar_mode         = true,
+            squared_spectrum = false,
             channels_number      = 4,
             channel_for_analysis = 0
         };

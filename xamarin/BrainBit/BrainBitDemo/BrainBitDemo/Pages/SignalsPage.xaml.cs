@@ -86,7 +86,7 @@ public partial class SignalsPage
         }
     }
 
-    private List<FilterParam> _selectedFilters;
+    private List<IIRFilterParam> _selectedFilters;
 
     public SignalsPage()
     {
@@ -188,19 +188,19 @@ public partial class SignalsPage
         if (_selectedFilters is { Count: > 0 })
         {
             var newFilterListO1 = new FilterList();
-            foreach (FilterParam item in _selectedFilters) newFilterListO1.AddFilter(new Filter(item));
+            foreach (IIRFilterParam item in _selectedFilters) newFilterListO1.AddFilter(new IIRFilter(item));
             CurrentFilterListO1 = newFilterListO1;
 
             var newFilterListO2 = new FilterList();
-            foreach (FilterParam item in _selectedFilters) newFilterListO2.AddFilter(new Filter(item));
+            foreach (IIRFilterParam item in _selectedFilters) newFilterListO2.AddFilter(new IIRFilter(item));
             CurrentFilterListO2 = newFilterListO2;
 
             var newFilterListT3 = new FilterList();
-            foreach (FilterParam item in _selectedFilters) newFilterListT3.AddFilter(new Filter(item));
+            foreach (IIRFilterParam item in _selectedFilters) newFilterListT3.AddFilter(new IIRFilter(item));
             CurrentFilterListT3 = newFilterListT3;
 
             var newFilterListT4 = new FilterList();
-            foreach (FilterParam item in _selectedFilters) newFilterListT4.AddFilter(new Filter(item));
+            foreach (IIRFilterParam item in _selectedFilters) newFilterListT4.AddFilter(new IIRFilter(item));
             CurrentFilterListT4 = newFilterListT4;
         }
         else

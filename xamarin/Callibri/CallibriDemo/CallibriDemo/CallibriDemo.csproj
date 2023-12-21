@@ -19,13 +19,13 @@
 
     <ItemGroup>
         <PackageReference Include="CallibriECG" Version="1.0.4" />
-        <PackageReference Include="EmStArtifacts" Version="1.0.2" />
-        <PackageReference Include="FiltersSDK" Version="1.0.4" />
-        <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.3" />
+        <PackageReference Include="EmStArtifacts" Version="1.0.3" />
+        <PackageReference Include="FiltersSDK" Version="1.0.8" />
+        <PackageReference Include="SkiaSharp.Views.Forms" Version="2.88.6" />
         <PackageReference Include="SpectrumLib" Version="1.0.1" />
-        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2578" />
-        <PackageReference Include="Xamarin.Essentials" Version="1.7.5" />
-        <PackageReference Include="XNeuroSDK" Version="1.0.4" />
+        <PackageReference Include="Xamarin.Forms" Version="5.0.0.2622" />
+        <PackageReference Include="Xamarin.Essentials" Version="1.8.1" />
+        <PackageReference Include="XNeuroSDK" Version="1.0.6.16" />
     </ItemGroup>
 
     <ItemGroup>
@@ -33,5 +33,20 @@
             <DependentUpon>MainPage.xaml</DependentUpon>
             <SubType>Code</SubType>
         </Compile>
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Pages\ChooseFilters\ChooseFiltersPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Pages\ECGPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Pages\EmotionPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Pages\SpectrumPage.xaml">
+        <Generator>MSBuild:Compile</Generator>
+      </EmbeddedResource>
     </ItemGroup>
 </Project>

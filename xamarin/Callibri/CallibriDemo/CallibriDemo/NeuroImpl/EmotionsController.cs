@@ -18,7 +18,7 @@ public class EmotionsController
 
         var mls = new MathLibSetting
         {
-            sampling_rate        = CallibriController.Instance.SamplingFrequency,
+            sampling_rate        = (uint)CallibriController.Instance.SamplingFrequency,
             process_win_freq     = 25,
             n_first_sec_skipped  = 6,
             fft_window           = 250,

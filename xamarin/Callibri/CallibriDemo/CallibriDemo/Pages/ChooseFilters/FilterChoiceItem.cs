@@ -12,21 +12,21 @@ public class FilterChoiceItem : INotifyPropertyChanged
     private bool _isSelected;
 
     private string      _name = "";
-    private FilterParam _param;
+    private IIRFilterParam _param;
 
-    public FilterChoiceItem(FilterParam type)
+    public FilterChoiceItem(IIRFilterParam type)
     {
         Param      = type;
         IsSelected = false;
     }
 
-    public FilterChoiceItem(FilterParam type, bool isSelected)
+    public FilterChoiceItem(IIRFilterParam type, bool isSelected)
     {
         Param      = type;
         IsSelected = isSelected;
     }
 
-    public FilterParam Param
+    public IIRFilterParam Param
     {
         get => _param;
 
