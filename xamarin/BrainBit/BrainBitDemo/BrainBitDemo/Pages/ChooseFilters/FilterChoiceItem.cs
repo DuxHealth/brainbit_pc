@@ -53,9 +53,9 @@ public class FilterChoiceItem : INotifyPropertyChanged
         }
     }
 
-    private FilterParam _param;
+    private IIRFilterParam _param;
 
-    public FilterParam Param
+    public IIRFilterParam Param
     {
         get => _param;
 
@@ -67,13 +67,13 @@ public class FilterChoiceItem : INotifyPropertyChanged
         }
     }
 
-    public FilterChoiceItem(FilterParam type)
+    public FilterChoiceItem(IIRFilterParam type)
     {
         Param      = type;
         IsSelected = false;
     }
 
-    public FilterChoiceItem(FilterParam type, bool isSelected)
+    public FilterChoiceItem(IIRFilterParam type, bool isSelected)
     {
         Param      = type;
         IsSelected = isSelected;

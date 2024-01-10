@@ -17,9 +17,9 @@ public partial class ChooseFiltersPage : ContentPage
 {
     private INavigation _navigation;
 
-    private TaskCompletionSource<List<FilterParam>> _taskCompletionSource;
+    private TaskCompletionSource<List<IIRFilterParam>> _taskCompletionSource;
 
-    public ChooseFiltersPage(List<FilterParam> preselectedFilters)
+    public ChooseFiltersPage(List<IIRFilterParam> preselectedFilters)
     {
         InitializeComponent();
 
@@ -37,10 +37,10 @@ public partial class ChooseFiltersPage : ContentPage
 
     public INavigation NavigationStack { get => _navigation ?? Navigation; }
 
-    public Task<List<FilterParam>> Show(INavigation navigation)
+    public Task<List<IIRFilterParam>> Show(INavigation navigation)
     {
         _taskCompletionSource?.TrySetResult(null);
-        _taskCompletionSource = new TaskCompletionSource<List<FilterParam>>();
+        _taskCompletionSource = new TaskCompletionSource<List<IIRFilterParam>>();
         _navigation           = navigation;
 
         NavigationStack.PushModalAsync(this, false);
@@ -57,11 +57,11 @@ public partial class ChooseFiltersPage : ContentPage
         return filters;
     }
 
-    private static void SelectFilters(IReadOnlyCollection<FilterChoiceItem> createdFilters, List<FilterParam> preselectedFilters)
+    private static void SelectFilters(IReadOnlyCollection<FilterChoiceItem> createdFilters, List<IIRFilterParam> preselectedFilters)
     {
         if (preselectedFilters == null)
             return;
-        foreach (FilterParam filterToSelect in preselectedFilters)
+        foreach (IIRFilterParam filterToSelect in preselectedFilters)
         {
             FilterChoiceItem filter = createdFilters.FirstOrDefault(created => { return created.Param.type == filterToSelect.type && created.Param.cutoffFreq == filterToSelect.cutoffFreq && created.Param.samplingFreq == filterToSelect.samplingFreq; });
             if (filter != null)

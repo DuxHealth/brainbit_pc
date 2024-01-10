@@ -7,20 +7,17 @@ project (${PRJ_NAME} LANGUAGES CXX)
 
 set(EMOTIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/em_st_artifacts")
 set(FLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters")
-set(ARTLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/artifacts")
 set(NEUROLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/neurosdk2")
 set(SPECTRUM_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/spectrum")
 
 if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
 	set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters/x64")
 	set(LIB_EMOTIONS "em_st_artifacts-x64")
-	set(LIB_ARTIFACTS "artifacts-x64")
 	set(LIB_NEURO "neurosdk2-x64")
 	set(LIB_SPECTRUM "spectrumlib-x64")
 else()
 	set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters/x86")
 	set(LIB_EMOTIONS "em_st_artifacts-x86")
-	set(LIB_ARTIFACTS "artifacts-x86")
 	set(LIB_NEURO "neurosdk2-x32")
 	set(LIB_SPECTRUM "spectrumlib-x86")
 endif()
@@ -48,7 +45,6 @@ add_subdirectory(sample)
 target_include_directories(${PRJ_NAME}
 PRIVATE 
 	"${EMOTIONS_PATH}/include"
-	"${ARTLIB_PATH}/include"
 	"${FLIB_PATH}/include"
 	"${NEUROLIB_PATH}/include"
 	"${SPECTRUM_PATH}/include"
@@ -65,11 +61,6 @@ target_link_directories(${PRJ_NAME} PRIVATE "${EMOTIONS_PATH}")
 find_file(EMOTIONS_DLL NAMES "${LIB_EMOTIONS}.dll" HINTS "${EMOTIONS_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
 target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_EMOTIONS})
 install(FILES ${EMOTIONS_DLL} DESTINATION ${LIB_FILE})
-
-target_link_directories(${PRJ_NAME} PRIVATE "${ARTLIB_PATH}")
-find_file(ARTLIB_DLL NAMES "${LIB_ARTIFACTS}.dll" HINTS "${ARTLIB_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
-target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_ARTIFACTS})
-install(FILES ${ARTLIB_DLL} DESTINATION ${LIB_FILE})
 
 target_link_directories(${PRJ_NAME} PRIVATE "${NEUROLIB_PATH}")
 find_file(NEURO_DLL NAMES "${LIB_NEURO}.dll" HINTS "${NEUROLIB_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)

@@ -32,7 +32,7 @@ class FiltersMath {
     fun addFilter(fParam: FilterParam){
         val f = Filter(fParam)
         tmpFilterList[fParam] = f.id
-        filterList.addFilter(Filter(fParam))
+        filterList.addFilter(f)
     }
 
     fun removeFilter(fParam: FilterParam){

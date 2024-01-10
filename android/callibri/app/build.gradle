@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.neurotech.callibrineurosdkdemo'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.neurotech.callibrineurosdkdemo"
         minSdk 21
-        targetSdk 33
+        targetSdk 34
         versionCode 1
         versionName "1.0"
 
@@ -52,7 +52,7 @@ android {
 }
 
 dependencies {
-    implementation 'com.github.BrainbitLLC:neurosdk2:1.0.4'
+    implementation 'com.github.BrainbitLLC:neurosdk2:1.0.6.17'
     implementation 'com.github.BrainbitLLC:Emotional-state-artifacts:1.0.1'
     implementation 'com.github.BrainbitLLC:SpectrumLib:1.0.0'
     implementation 'com.github.BrainbitLLC:SignalFilters:1.0'

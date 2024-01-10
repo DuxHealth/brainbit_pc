@@ -33,7 +33,7 @@ MathLibSample::MathLibSample()
 		mentalAndSpectralSetting.n_sec_for_instant_estimation = 2;
 
 		//Create object of lib
-		ResStatus opSt;
+		EMOpStatus opSt;
 		_mathLib = createMathLib(mathLibSetting, artifactDetectSetting, shortArtifactDetectSetting, mentalAndSpectralSetting, &opSt);
 
 		//Check if operation is success or not
@@ -56,7 +56,7 @@ MathLibSample::~MathLibSample()
 {
 	try
 	{
-		ResStatus opSt;
+		EMOpStatus opSt;
 		freeMathLib(_mathLib, &opSt);
 		if (!opSt.Success)
 			throw std::invalid_argument(opSt.ErrorMsg);
@@ -82,7 +82,7 @@ bool MathLibSample::pushData(RawChannels* data, int size)
 		if (_mathLib == nullptr)
 			throw std::invalid_argument("MathLib is null!");
 
-		ResStatus opSt;
+		EMOpStatus opSt;
 		MathLibPushData(_mathLib, data, size, &opSt);
 		if (!opSt.Success)
 			throw std::invalid_argument(opSt.ErrorMsg);
@@ -109,7 +109,7 @@ bool MathLibSample::processData()
 		if (_mathLib == nullptr)
 			throw std::invalid_argument("MathLib is null!");
 
-		ResStatus opSt;
+		EMOpStatus opSt;
 		MathLibProcessDataArr(_mathLib, &opSt);
 		if (!opSt.Success)
 			throw std::invalid_argument(opSt.ErrorMsg);
@@ -140,7 +140,7 @@ void MathLibSample::printResult()
 
 		int size = 1;
 		SpectralDataPercents* spectralData = new SpectralDataPercents[size];
-		ResStatus opSt;
+		EMOpStatus opSt;
 		MathLibReadSpectralDataPercentsArr(_mathLib, spectralData, &size, &opSt);
 		if (!opSt.Success)
 			throw std::invalid_argument(opSt.ErrorMsg);

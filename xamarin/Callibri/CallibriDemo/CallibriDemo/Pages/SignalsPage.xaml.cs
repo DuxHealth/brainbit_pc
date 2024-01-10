@@ -16,7 +16,7 @@ public partial class SignalsPage
     private readonly object     _lockObj = new();
     private          bool       _isStarted;
 
-    private List<FilterParam> _selectedFilters;
+    private List<IIRFilterParam> _selectedFilters;
 
     private FilterList _currentFilterList;
     public FilterList CurrentFilterList
@@ -117,7 +117,7 @@ public partial class SignalsPage
         if (_selectedFilters is { Count: > 0 })
         {
             var newFilterList = new FilterList();
-            foreach (FilterParam item in _selectedFilters) newFilterList.AddFilter(new Filter(item));
+            foreach (IIRFilterParam item in _selectedFilters) newFilterList.AddFilter(new IIRFilter(item));
             CurrentFilterList = newFilterList;
         }
         else

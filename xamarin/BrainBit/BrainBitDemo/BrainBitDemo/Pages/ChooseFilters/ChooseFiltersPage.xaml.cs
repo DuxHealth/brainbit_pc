@@ -17,11 +17,11 @@ public partial class ChooseFiltersPage
 
     public INavigation NavigationStack { get => _navigation ?? Navigation; }
 
-    private TaskCompletionSource<List<FilterParam>> _taskCompletionSource;
+    private TaskCompletionSource<List<IIRFilterParam>> _taskCompletionSource;
 
     public CustomObservableCollection<FilterChoiceItem> FiltersList { get; set; }
 
-    public ChooseFiltersPage(List<FilterParam> preselectedFilters)
+    public ChooseFiltersPage(List<IIRFilterParam> preselectedFilters)
     {
         InitializeComponent();
 
@@ -35,10 +35,10 @@ public partial class ChooseFiltersPage
         filtersListView.BindingContext = this;
     }
 
-    public Task<List<FilterParam>> Show(INavigation navigation)
+    public Task<List<IIRFilterParam>> Show(INavigation navigation)
     {
         _taskCompletionSource?.TrySetResult(null);
-        _taskCompletionSource = new TaskCompletionSource<List<FilterParam>>();
+        _taskCompletionSource = new TaskCompletionSource<List<IIRFilterParam>>();
         _navigation           = navigation;
 
         NavigationStack.PushModalAsync(this, false);
@@ -55,7 +55,7 @@ public partial class ChooseFiltersPage
         return filters;
     }
 
-    private static void SelectFilters(IReadOnlyCollection<FilterChoiceItem> createdFilters, List<FilterParam> preselectedFilters)
+    private static void SelectFilters(IReadOnlyCollection<FilterChoiceItem> createdFilters, List<IIRFilterParam> preselectedFilters)
     {
         if (preselectedFilters == null)
             return;
