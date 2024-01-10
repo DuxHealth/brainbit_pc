@@ -24,7 +24,7 @@ class EmotionsImpl {
                                                   andNFirstSecSkipped: 4,
                                                   andBipolarMode: true,
                                                   andSquaredSpectrum: true,
-                                                  andChannelsNumber: 1,//4
+                                                  andChannelsNumber: 1,
                                                   andChannelForAnalysis: 0)
     
     private let artifactDetectSetting = EMArtifactDetectSetting(artBord: 110,

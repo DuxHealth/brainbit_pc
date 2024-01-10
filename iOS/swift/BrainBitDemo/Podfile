@@ -8,7 +8,7 @@ target 'BrainBitDemo' do
   pod 'DropDown', '2.3.4'
   pod 'nt_filters', '1.0.10'
   pod 'em-st-artifacts', '1.0.2'
-  pod 'spectrumlib', '1.0.0'
+  pod 'spectrumlib', '1.0.1'
 
 post_install do |installer|
   installer.pods_project.targets.each do |target|
