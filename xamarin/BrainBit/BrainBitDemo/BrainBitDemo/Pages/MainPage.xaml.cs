@@ -3,6 +3,7 @@
 using BrainBitDemo.NeuroImpl;
 
 using NeuroSDK;
+using SignalMath;
 
 namespace BrainBitDemo.Pages;
 
@@ -47,11 +48,14 @@ public partial class MainPage
         DevStateView.BatteryChanged(null, BrainBitController.Instance.BatteryPower);
     }
 
-    private async void SearchButton_Clicked(object     sender, EventArgs e) { await Navigation.PushAsync(new SearchSensorsPage()); }
+    private async void SearchButton_Clicked(object     sender, EventArgs e) {
+        await Navigation.PushAsync(new SearchSensorsPage()); 
+    }
     private async void DeviceInfoButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new DeviceInfoPage()); }
 
     private async void ResistanceButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new ResistancePage()); }
     private async void SignalButton_Clicked(object     sender, EventArgs e) { await Navigation.PushAsync(new SignalsPage()); }
     private async void EmotionButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new EmotionPage()); }
+    private async void EmotionMonopolarButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new EmotionMonopolarPage()); }
     private async void SpectrumButton_Clicked(object sender, EventArgs e) { await Navigation.PushAsync(new SpectrumPage()); }
 }

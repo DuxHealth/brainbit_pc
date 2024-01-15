@@ -30,11 +30,14 @@ internal class BrainBitController
             {
                 if (!enabled) return;
 
-                _scanner ??= new Scanner(SensorFamily.SensorLEBrainBit, SensorFamily.SensorLEBrainBitBlack);
+                Task.Factory.StartNew(() => {
+                    _scanner ??= new Scanner(SensorFamily.SensorLEBrainBit, SensorFamily.SensorLEBrainBitBlack);
 
-                _sensorFounded               =  sensorChanged;
-                _scanner.EventSensorsChanged += _sensorFounded;
-                _scanner.Start();
+                    _sensorFounded = sensorChanged;
+                    _scanner.EventSensorsChanged += _sensorFounded;
+                    _scanner.Start();
+                });
+                
             }
         );
     }

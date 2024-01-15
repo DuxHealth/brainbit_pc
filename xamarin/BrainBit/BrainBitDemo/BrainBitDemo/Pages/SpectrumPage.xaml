@@ -21,11 +21,7 @@
                     Text="{Binding SpectrumButtonText}"
                     Clicked="SpectrumButton_OnClicked"
                     HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand"
-                    BackgroundColor="DarkCyan"
-                    FontSize="Body"
-                    CornerRadius="10"
-                    TextColor="White" />
+                    VerticalOptions="FillAndExpand" />
 
             <Grid
                 Grid.Column="0"

@@ -15,19 +15,100 @@
             RowDefinitions="0.1*, *, 40">
 
             <Button Grid.Row="0"
-                    BackgroundColor="DarkCyan"
-                    CornerRadius="10"
-                    FontSize="Body"
-                    TextColor="White"
                     Text="{Binding EmotionButtonText}"
                     Clicked="StartCalibration_Clicked"
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand" />
 
-            <Label Grid.Row="1"
-                    Text="{Binding EmotionStatus}"
-                    TextColor="Black"
-                    FontSize="14" />
+            <StackLayout Grid.Row="1" 
+                         Orientation="Vertical"
+                         HorizontalOptions="FillAndExpand">
+                <Label Text="Calibration:"/>
+                <ProgressBar x:Name="CalibrationPB"
+                             ProgressColor="Orange"/>
+
+                <Label x:Name="ArtSequenceLabel"/>
+                <Label x:Name="ArtBothSidesLabel"/>
+
+                <Grid RowDefinitions="30, 30, 30"
+                      ColumnDefinitions="*, *, *, *, *">
+
+                    <Label Grid.Row="0"
+                           Grid.Column="0"
+                           Text="Delta"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           x:Name="DeltaPercentLabel"/>
+                    
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Text="Theta"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="1"
+                           x:Name="ThetaPercentLabel"/>
+                    
+                    <Label Grid.Row="0"
+                           Grid.Column="2"
+                           Text="Alpha"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="2"
+                           x:Name="AlphaPercentLabel"/>
+                    <Label Grid.Row="2"
+                           Grid.Column="2"
+                           x:Name="AlphaRawLabel"/>
+                    
+                    <Label Grid.Row="0"
+                           Grid.Column="3"
+                           Text="Beta"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="3"
+                           x:Name="BetaPercentLabel"/>
+                    <Label Grid.Row="2"
+                           Grid.Column="3"
+                           x:Name="BetaRawLabel"/>
+
+                    <Label Grid.Row="0"
+                           Grid.Column="4"
+                           Text="Gamma"/>
+                    <Label Grid.Row="1"
+                           Grid.Column="4"
+                           x:Name="GammaPercentLabel"/>
+
+                </Grid>
+
+                <Grid RowDefinitions="30, 30, 30"
+                      ColumnDefinitions="*,*,*">
+                    
+                    <Label Grid.Row="0"
+                           Grid.Column="1"
+                           Text="Attention"></Label>
+                    <Label Grid.Row="0"
+                           Grid.Column="2"
+                           Text="Relax"></Label>
+                    <Label Grid.Row="1"
+                           Grid.Column="0"
+                           Text="Percent"/>
+                    <Label Grid.Row="2"
+                           Grid.Column="0"
+                           Text="Raw"/>
+
+                    <Label Grid.Row="1"
+                           Grid.Column="1" 
+                           x:Name="AttentionPercentLabel"/>
+                    <Label Grid.Row="2"
+                           Grid.Column="1" 
+                           x:Name="AttentionRawLabel"/>
+
+                    <Label Grid.Row="1"
+                           Grid.Column="2" 
+                           x:Name="RelaxPercentLabel"/>
+                    <Label Grid.Row="2"
+                           Grid.Column="2" 
+                           x:Name="RelaxRawLabel"/>
+
+                </Grid>
+
+            </StackLayout>
 
             <pages:DeviceStateView
                 x:Name="DevStateView"

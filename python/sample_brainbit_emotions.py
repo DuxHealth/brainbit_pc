@@ -23,7 +23,7 @@ def on_battery_changed(sensor, battery):
 
 
 def on_signal_received(sensor, data):
-    raw_channels = [support_classes.RawChannels]
+    raw_channels = []
     for sample in data:
         left_bipolar = sample.T3-sample.O1
         right_bipolar = sample.T4-sample.O2

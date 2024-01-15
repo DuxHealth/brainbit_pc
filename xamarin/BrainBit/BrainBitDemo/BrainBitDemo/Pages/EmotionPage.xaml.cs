@@ -1,9 +1,11 @@
 ﻿using System;
-
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using BrainBitDemo.NeuroImpl;
 
 using NeuroSDK;
-
+using SignalMath;
+using Xamarin.Essentials;
 using Xamarin.Forms.Xaml;
 
 namespace BrainBitDemo.Pages;
@@ -15,20 +17,8 @@ public partial class EmotionPage
 
     public string EmotionButtonText { get => _isStarted ? "Pause" : "Start"; }
 
-    private string _emotionStatus;
 
-    public string EmotionStatus
-    {
-        get => _emotionStatus;
-
-        set
-        {
-            _emotionStatus = value;
-            OnPropertyChanged();
-        }
-    }
-
-    private bool _isButtonEnabled;
+    private bool _isButtonEnabled = true;
 
     public bool IsButtonEnabled
     {
@@ -59,15 +49,21 @@ public partial class EmotionPage
         InitializeComponent();
 
         BindingContext     = this;
-        IsButtonEnabled    = true;
         _emotionController = new EmotionsController();
+        _emotionController.progressCalibrationCallback = calibrationCallback;
+        _emotionController.isArtefactedSequenceCallback = isArtifactedSequenceCallback;
+        _emotionController.isBothSidesArtifactedCallback = isBothSidesArtifactedCallback;
+        _emotionController.lastMindDataCallback = mindDataCallback;
+        _emotionController.lastSpectralDataCallback = lastSpectralDataCallback;
+        _emotionController.rawSpectralDataCallback = rawSpectralDataCallback;
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
 
-        BrainBitController.Instance.ConnectionStateChanged = DevStateView.ConnectionStateChanged;
+        BrainBitController.Instance.ConnectionStateChanged += DevStateView.ConnectionStateChanged;
+        BrainBitController.Instance.ConnectionStateChanged += OnConnectionStateChanged;
         BrainBitController.Instance.BatteryChanged         = DevStateView.BatteryChanged;
 
         DevStateView.ConnectionStateChanged(null, BrainBitController.Instance.ConnectionState);
@@ -76,7 +72,8 @@ public partial class EmotionPage
 
     protected override void OnDisappearing()
     {
-        BrainBitController.Instance.ConnectionStateChanged = null;
+        BrainBitController.Instance.ConnectionStateChanged -= DevStateView.ConnectionStateChanged;
+        BrainBitController.Instance.ConnectionStateChanged -= OnConnectionStateChanged;
         BrainBitController.Instance.BatteryChanged         = null;
 
         BrainBitController.Instance.StopSignal();
@@ -86,7 +83,11 @@ public partial class EmotionPage
         base.OnDisappearing();
     }
 
-    private void OnSignalReceived(ISensor sensor, BrainBitSignalData[] data) { EmotionStatus = _emotionController.PushData(data); }
+    private void OnConnectionStateChanged(ISensor sensor, SensorState sensorState) {
+        IsButtonEnabled = sensorState == SensorState.StateInRange;
+    }
+
+    private void OnSignalReceived(ISensor sensor, BrainBitSignalData[] data) { _emotionController.ProcessData(data); }
 
     private void StartCalibration_Clicked(object sender, EventArgs e)
     {
@@ -101,5 +102,56 @@ public partial class EmotionPage
 
 
         IsStarted = !IsStarted;
+    }
+
+    private void calibrationCallback(int progress)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            CalibrationPB.Progress = progress * 0.01;
+        });
+        
+    }
+
+    private void mindDataCallback(MindData data)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            AttentionPercentLabel.Text = $"{data.RelAttention}%";
+            RelaxPercentLabel.Text = $"{data.RelRelaxation}%";
+            AttentionRawLabel.Text = $"{data.InstAttention}";
+            RelaxRawLabel.Text = $"{data.InstRelaxation}";
+        });
+    }
+
+    private void isArtifactedSequenceCallback(bool artifacted)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            ArtSequenceLabel.Text = $"Artefacted sequence: {artifacted}";
+        });
+    }
+
+    private void isBothSidesArtifactedCallback(bool artifacted)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            ArtBothSidesLabel.Text = $"Artefacted both side: {artifacted}";
+        });
+    }
+
+    private void lastSpectralDataCallback(SpectralDataPercents spectralData)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            DeltaPercentLabel.Text = $"{(int)(spectralData.Delta * 100)}%";
+            ThetaPercentLabel.Text = $"{(int)(spectralData.Theta * 100)}%";
+            AlphaPercentLabel.Text = $"{(int)(spectralData.Alpha * 100)}%";
+            BetaPercentLabel.Text = $"{(int)(spectralData.Beta * 100)}%";
+            GammaPercentLabel.Text = $"{(int)(spectralData.Gamma * 100)}%";
+        });
+    }
+
+    private void rawSpectralDataCallback(RawSpectVals spectVals)
+    {
+        MainThread.BeginInvokeOnMainThread(() => {
+            AlphaRawLabel.Text = $"{spectVals.Alpha}";
+            BetaRawLabel.Text = $"{spectVals.Beta}";
+        });
     }
 }

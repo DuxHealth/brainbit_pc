@@ -18,11 +18,7 @@
                 Grid.Row="0"
                 Margin="40, 0, 40,0"
                 Text="{Binding SearchingText}"
-                Clicked="SearchButton_Clicked"
-                FontSize="Body"
-                BackgroundColor="DarkCyan"
-                CornerRadius="10"
-                TextColor="White" />
+                Clicked="SearchButton_Clicked" />
 
             <ListView
                 Grid.Row="1"
