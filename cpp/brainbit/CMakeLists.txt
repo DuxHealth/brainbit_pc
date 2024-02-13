@@ -1,27 +1,40 @@
 cmake_minimum_required (VERSION 3.14)
 
-set(LIB_NAME neurosdk2-x64d)
-set(PRJ_NAME window_sample)
+set(PRJ_NAME brainbit_sample)
 
 project (${PRJ_NAME} LANGUAGES CXX)
 
-set(EMOTIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/em_st_artifacts")
-set(FLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters")
-set(NEUROLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/neurosdk2")
-set(SPECTRUM_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/spectrum")
+if(WIN32)
+	set(SYSTEM_NAME_PREF "windows")
+elseif (UNIX)
+	set(SYSTEM_NAME_PREF "linux")
+endif ()
 
-if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
-	set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters/x64")
-	set(LIB_EMOTIONS "em_st_artifacts-x64")
-	set(LIB_NEURO "neurosdk2-x64")
-	set(LIB_SPECTRUM "spectrumlib-x64")
-else()
-	set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/filters/x86")
-	set(LIB_EMOTIONS "em_st_artifacts-x86")
-	set(LIB_NEURO "neurosdk2-x32")
-	set(LIB_SPECTRUM "spectrumlib-x86")
-endif()
-set(LIB_FILTERS "filters")
+set(EMOTIONS_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/em_st_artifacts")
+set(FLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/filters")
+set(NEUROLIB_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/neurosdk2")
+set(SPECTRUM_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/spectrum")
+
+if(WIN32)
+	if (${CMAKE_SIZEOF_VOID_P} MATCHES 8)
+		set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/filters/x64.dll")
+		set(LIB_EMOTIONS "em_st_artifacts-x64.dll")
+		set(LIB_NEURO "neurosdk2-x64.dll")
+		set(LIB_SPECTRUM "spectrumlib-x64.dll")
+	else()
+		set(FLIB_DLL_PATH "${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/filters/x86.dll")
+		set(LIB_EMOTIONS "em_st_artifacts-x86.dll")
+		set(LIB_NEURO "neurosdk2-x32.dll")
+		set(LIB_SPECTRUM "spectrumlib-x86.dll")
+	endif()
+	set(LIB_FILTERS "filters.dll")
+elseif (UNIX)
+	set(LIB_EMOTIONS "libem_st_artifacts.so")
+	set(LIB_NEURO "libneurosdk2.so")
+	set(LIB_FILTERS "libfilters.so")
+	set(LIB_SPECTRUM "libspectrumlib.so")
+endif ()
+
 
 set(PRJ_VER_MAJOR 1)
 set(PRJ_VER_MINOR 0)
@@ -50,24 +63,15 @@ PRIVATE
 	"${SPECTRUM_PATH}/include"
 )
 
-set(LIB_FILE ${CMAKE_CURRENT_SOURCE_DIR}/out/build/x64-Debug/sample/main)
+if (UNIX)
+	# Optionally add dependencies
+	file(GLOB DEPENDENCES
+			"${CMAKE_CURRENT_SOURCE_DIR}/../libs/${SYSTEM_NAME_PREF}/dependences/*.*"
+	)
+	target_link_libraries(${PRJ_NAME} PRIVATE ${DEPENDENCES})
+endif()
 
-target_link_directories(${PRJ_NAME} PRIVATE "${FLIB_DLL_PATH}")
-find_file(FLIB_DLL NAMES "${LIB_FILTERS}.dll" HINTS "${FLIB_DLL_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
-target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_FILTERS})
-install(FILES ${FLIB_DLL} DESTINATION ${LIB_FILE})
-
-target_link_directories(${PRJ_NAME} PRIVATE "${EMOTIONS_PATH}")
-find_file(EMOTIONS_DLL NAMES "${LIB_EMOTIONS}.dll" HINTS "${EMOTIONS_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
-target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_EMOTIONS})
-install(FILES ${EMOTIONS_DLL} DESTINATION ${LIB_FILE})
-
-target_link_directories(${PRJ_NAME} PRIVATE "${NEUROLIB_PATH}")
-find_file(NEURO_DLL NAMES "${LIB_NEURO}.dll" HINTS "${NEUROLIB_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
-target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_NEURO})
-install(FILES ${NEURO_DLL} DESTINATION ${LIB_FILE})
-
-target_link_directories(${PRJ_NAME} PRIVATE "${SPECTRUM_PATH}")
-find_file(SPECTRUM_DLL NAMES "${LIB_SPECTRUM}.dll" HINTS "${SPECTRUM_PATH}" REQUIRED NO_CMAKE_FIND_ROOT_PATH)
-target_link_libraries(${PRJ_NAME} PRIVATE ${LIB_SPECTRUM})
-install(FILES ${SPECTRUM_DLL} DESTINATION ${LIB_FILE})
+target_link_libraries(${PRJ_NAME} PRIVATE "${EMOTIONS_PATH}/${LIB_EMOTIONS}"
+		"${NEUROLIB_PATH}/${LIB_NEURO}"
+		"${FLIB_PATH}/${LIB_FILTERS}"
+		"${SPECTRUM_PATH}/${LIB_SPECTRUM}")

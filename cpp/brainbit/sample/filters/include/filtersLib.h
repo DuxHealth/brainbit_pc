@@ -37,9 +37,6 @@ public:
 	//Convert raw data with filters
 	double processElement(double elem);
 
-	//Print results
-	void printResult(double* arr, int size);
-
 
 private:
 	TFilter* _filter1 = nullptr;

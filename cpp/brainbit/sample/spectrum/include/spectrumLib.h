@@ -35,10 +35,11 @@ public:
 
 	~SpectrumLibSample();
 
-	void pushData(double* arr, int size);
-	void processData();
+	void processData(double* arr, int size);
 
 	void printResult();
+
+    void setNewSamplesSize();
 
 private:
 	SpectrumMath* _spectrumMath;

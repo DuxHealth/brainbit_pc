@@ -55,11 +55,12 @@ SpectrumLibSample::~SpectrumLibSample()
 	}
 }
 
-void SpectrumLibSample::pushData(double* arr, int size)
+void SpectrumLibSample::processData(double* arr, int size)
 {
 	try
 	{
 		SpectrumMathPushData(_spectrumMath, arr, size);
+        SpectrumMathProcessData(_spectrumMath);
 	}
 	catch (std::exception error)
 	{
@@ -73,22 +74,21 @@ void SpectrumLibSample::pushData(double* arr, int size)
 	}
 }
 
-void SpectrumLibSample::processData()
-{
-	try
-	{
-		SpectrumMathProcessData(_spectrumMath);
-	}
-	catch (std::exception error)
-	{
-		//Print Error Message on Console.
-		EConsole::PrintScreen("[[ERROR : ", error.what(), " ]]");
-	}
-	catch (...)
-	{
-		//Print Error Message on Console (unknown error).
-		EConsole::PrintScreen("[[ERROR : Invalid error! ]]");
-	}
+void SpectrumLibSample::setNewSamplesSize(){
+    try
+    {
+        SpectrumMathSetNewSampleSize(_spectrumMath);
+    }
+    catch (std::exception error)
+    {
+        //Print Error Message on Console.
+        EConsole::PrintScreen("[[ERROR : ", error.what(), " ]]");
+    }
+    catch (...)
+    {
+        //Print Error Message on Console (unknown error).
+        EConsole::PrintScreen("[[ERROR : Invalid error! ]]");
+    }
 }
 
 void SpectrumLibSample::printResult()

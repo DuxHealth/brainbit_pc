@@ -176,7 +176,7 @@ void BrainBitSpectrumFunction()
 
 int main()
 {
-	BrainBitSample code = BrainBitSample::BrainBit_EmStArtifacts;
+	BrainBitSample code = BrainBitSample::BrainBit_Spectrum;
 
 	switch (code)
 	{

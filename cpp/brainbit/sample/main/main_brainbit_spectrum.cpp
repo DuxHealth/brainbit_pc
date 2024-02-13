@@ -1,9 +1,12 @@
 #include "main_brainbit_em_st_artifacts.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleBrainBitSpectrum(Sensor* sensor_brainbit)
 {
 	//Create custom object of Spectrum
-	SpectrumLibSample* spectrumLib = new SpectrumLibSample();
+	auto* spectrumLib = new SpectrumLibSample();
 
 	//If lib is null, stop code
 	if (spectrumLib == nullptr)
@@ -12,7 +15,7 @@ void SampleBrainBitSpectrum(Sensor* sensor_brainbit)
 	//Create custom object of BrainBit.
 	//If you want to know, how to work with device ('LEBrainBit')
 	//you can look in folder 'brainbit'.
-	SampleBrainBit* brainbit = new SampleBrainBit(sensor_brainbit);
+	auto* brainbit = new SampleBrainBit(sensor_brainbit);
 
 	//Check if object of BrainBit is null or not
 	if (brainbit == nullptr)
@@ -54,7 +57,7 @@ void SampleBrainBitSpectrum(Sensor* sensor_brainbit)
 	}
 
 	//Wait 10 seconds to get signal data
-	Sleep(10000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(30000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -80,10 +83,7 @@ void SampleBrainBitSpectrum(Sensor* sensor_brainbit)
 	brainbit->RemoveSignalCallbackBrainBit_Spectrum();
 
 	//Wait 2 seconds
-	Sleep(2000);
-
-	//Print result of spectral data
-	spectrumLib->printResult();
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Clear memory of object brainbit
 	delete brainbit;

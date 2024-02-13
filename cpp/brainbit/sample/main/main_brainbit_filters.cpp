@@ -1,5 +1,8 @@
 #include "main_brainbit_filters.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleBrainBitFilters(Sensor* sensor_brainbit)
 {
 	//Create custom object of Filters
@@ -54,7 +57,7 @@ void SampleBrainBitFilters(Sensor* sensor_brainbit)
 	}
 
 	//Wait 10 seconds to get signal data
-	Sleep(10000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -77,10 +80,10 @@ void SampleBrainBitFilters(Sensor* sensor_brainbit)
 	}
 
 	//Remove signal callback
-	brainbit->RemoveSignalCallbackBrainBit_EmStArtifacts();
+	brainbit->RemoveSignalCallbackBrainBit_Filters();
 
 	//Wait 2 seconds
-	Sleep(2000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Clear memory of object brainbit
 	delete brainbit;

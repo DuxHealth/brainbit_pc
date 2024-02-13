@@ -8,24 +8,20 @@
 void SignalCallback_Spectrum(Sensor* sensor, BrainBitSignalData* data, int32_t size, void* userData)
 {
 	EConsole::PrintLog("=== BRAIN BIT SIGNAL DATA ===");
-	RawChannels* arr = new RawChannels[size];
+
+    auto* arr_spectrum = new double[size];
+
 	for (int i = 0; i < size; i++)
 	{
-		arr[i].left_bipolar = data[i].T3 - data[i].O1;
-		arr[i].right_bipolar = data[i].T4 - data[i].O2;
+        arr_spectrum[i] = data[i].O1;
 
-		EConsole::PrintLog("Left bipolar: ", arr[i].left_bipolar);
-		EConsole::PrintLog("Right bipolar: ", arr[i].right_bipolar);
+		EConsole::PrintLog("O1: ", arr_spectrum[i]);
 	}
 
-	SpectrumLibSample* spectrumLib = (SpectrumLibSample*)userData;
-
-	double* arr_spectrum = new double[size];
-	for (int i = 0; i < size; i++)
-		arr_spectrum[i] = arr[i].left_bipolar;
-	spectrumLib->pushData(arr_spectrum, size);
-	spectrumLib->processData();
+	auto* spectrumLib = (SpectrumLibSample*)userData;
+    spectrumLib->processData(arr_spectrum, size);
+    spectrumLib->printResult();
+    spectrumLib->setNewSamplesSize();
 
 	delete[] arr_spectrum;
-	delete[] arr;
 }

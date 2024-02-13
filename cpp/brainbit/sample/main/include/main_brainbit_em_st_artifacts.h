@@ -34,4 +34,7 @@
 
 #include "mathLib.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleBrainBitEmStArtifacts(Sensor* sensor_brainbit);

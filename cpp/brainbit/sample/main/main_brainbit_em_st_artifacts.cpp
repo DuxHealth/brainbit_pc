@@ -54,7 +54,7 @@ void SampleBrainBitEmStArtifacts(Sensor* sensor_brainbit)
 	}
 
 	//Wait 10 seconds to get signal data
-	Sleep(10000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -80,7 +80,7 @@ void SampleBrainBitEmStArtifacts(Sensor* sensor_brainbit)
 	brainbit->RemoveSignalCallbackBrainBit_EmStArtifacts();
 
 	//Wait 2 seconds
-	Sleep(2000);
+    std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Print result of spectral data
 	mathLib->printResult();
