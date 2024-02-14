@@ -301,38 +301,38 @@ private:
 	Sensor* _sensor;
 
 	//Handle of Battery Power Callback
-	BattPowerListenerHandle _lBattPowerHandle = 0;
+	BattPowerListenerHandle _lBattPowerHandle = nullptr;
 
 	//Handle of Connection State Device Callback
-	SensorStateListenerHandle _lStateHandle = 0;
+	SensorStateListenerHandle _lStateHandle = nullptr;
 
 	//Handle of Signal Data Device Callback
-	CallibriSignalDataListenerHandle _lSignalDataHandle = 0;
+	CallibriSignalDataListenerHandle _lSignalDataHandle = nullptr;
 
 	//Handle of Respiration Data Device Callback
-	CallibriRespirationDataListenerHandle _lRespirationDataHandle = 0;
+	CallibriRespirationDataListenerHandle _lRespirationDataHandle = nullptr;
 
 	//Handle of Electrode State Device Callback
-	CallibriElectrodeStateListenerHandle _lElectrodeStateHandle = 0;
+	CallibriElectrodeStateListenerHandle _lElectrodeStateHandle = nullptr;
 
 	//Handle of Envelope Data Device Callback
-	CallibriEnvelopeDataListenerHandle _lEnvelopeDataHandle = 0;
+	CallibriEnvelopeDataListenerHandle _lEnvelopeDataHandle = nullptr;
 
 	//Handle of MEMS Data Device Callback
-	MEMSDataListenerHandle _lMEMSDataHandle = 0;
+	MEMSDataListenerHandle _lMEMSDataHandle = nullptr;
 
 	//Handle of Quaternion Data Device Callback
-	QuaternionDataListenerHandle _lQuaternionDataHandle = 0;
+	QuaternionDataListenerHandle _lQuaternionDataHandle = nullptr;
 
 	//Handle of Signal Data Device Callback (Em_St_Artifacts)
-	CallibriSignalDataListenerHandle _lSignalDataEmStArtifactsHandle = 0;
+	CallibriSignalDataListenerHandle _lSignalDataEmStArtifactsHandle = nullptr;
 
 	//Handle of Signal Data Device Callback (Callibri ECG)
-	CallibriSignalDataListenerHandle _lSignalDataCallibriECGHandle = 0;
+	CallibriSignalDataListenerHandle _lSignalDataCallibriECGHandle = nullptr;
 
 	//Handle of Signal Data Device Callback (Filters)
-	CallibriSignalDataListenerHandle _lSignalDataFiltersHandle = 0;
+	CallibriSignalDataListenerHandle _lSignalDataFiltersHandle = nullptr;
 
 	//Handle of Signal Data Device Callback (Spectrum)
-	CallibriSignalDataListenerHandle _lSignalDataSpectrumHandle = 0;
+	CallibriSignalDataListenerHandle _lSignalDataSpectrumHandle = nullptr;
 };

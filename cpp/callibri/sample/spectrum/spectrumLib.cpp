@@ -4,9 +4,9 @@ SpectrumLibSample::SpectrumLibSample()
 {
 	try
 	{
-		int sampling_rate = 250;
+		int sampling_rate = 1000;
 		int process_win_rate = 5;
-		int fft_window = 1000;
+		int fft_window = 4000;
 
 		_spectrumMath = createSpectrumMath(sampling_rate, fft_window, process_win_rate);
 

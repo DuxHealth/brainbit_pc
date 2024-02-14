@@ -89,7 +89,7 @@ bool SampleCallibri::AddSignalCallbackCallibri()
 
 		OpStatus outStatus;
 
-		bool result = addSignalCallbackCallibri(_sensor, SignalCallback, &_lSignalDataEmStArtifactsHandle, nullptr, &outStatus);
+		bool result = addSignalCallbackCallibri(_sensor, SignalCallback, &_lSignalDataHandle, nullptr, &outStatus);
 
 		if (!result)
 		{
@@ -368,13 +368,13 @@ bool SampleCallibri::RemoveSignalCallbackCallibri()
 			throw std::invalid_argument("Null sensor!");
 
 		//Check if handle is empty or not.
-		if (_lSignalDataHandle == 0)
+		if (_lSignalDataHandle == nullptr)
 		{
 			throw std::invalid_argument("Null Signal data handle!");
 		}
 
 		removeSignalCallbackCallibri(_lSignalDataHandle);
-		_lSignalDataHandle = 0;
+		_lSignalDataHandle = nullptr;
 
 		return true;
 	}

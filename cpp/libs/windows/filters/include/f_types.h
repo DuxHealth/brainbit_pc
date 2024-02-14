@@ -4,6 +4,7 @@
 #include "lib_export.h"
 #include <stdint.h>
 typedef int TFilterID;
+typedef uint8_t TOpStatus; // 0 - no error, 1 - has error
 
 enum FilterType : uint8_t
 {

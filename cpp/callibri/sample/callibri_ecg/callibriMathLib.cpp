@@ -5,7 +5,7 @@ CallibriMathLibSample::CallibriMathLibSample()
 	try
 	{
 		//Create setting for lib
-		int sampling_rate = 250;
+		int sampling_rate = 1000;
 		int data_window = sampling_rate / 2;
 		int nwins_for_pressure_index = 30;
 

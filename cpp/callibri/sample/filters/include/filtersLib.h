@@ -45,6 +45,5 @@ private:
 	TFilter* _filter1 = nullptr;
 	TFilter* _filter2 = nullptr;
 	TFilter* _filter3 = nullptr;
-	TFilter* _filter4 = nullptr;
 	TFilterList* _flist = nullptr;
 };

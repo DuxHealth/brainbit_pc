@@ -45,13 +45,13 @@ bool SampleCallibri::RemoveSignalCallbackCallibri_EmStArtifacts()
 		if (_sensor == nullptr)
 			throw std::invalid_argument("Null sensor!");
 
-		if (_lSignalDataEmStArtifactsHandle == 0)
+		if (_lSignalDataEmStArtifactsHandle == nullptr)
 		{
 			throw std::invalid_argument("Null Signal Data for EmStArtifacts handle!");
 		}
 
 		removeSignalCallbackCallibri(_lSignalDataEmStArtifactsHandle);
-		_lSignalDataEmStArtifactsHandle = 0;
+		_lSignalDataEmStArtifactsHandle = nullptr;
 
 		return true;
 	}

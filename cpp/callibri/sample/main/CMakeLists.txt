@@ -1,13 +1,6 @@
 ﻿cmake_minimum_required (VERSION 3.14)
 
 set(
-	MAIN_SOURCE
-	${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-)
-
-add_executable (${PRJ_NAME} ${MAIN_SOURCE})
-
-set(
 	HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/include/main_scanner.h
 	${CMAKE_CURRENT_SOURCE_DIR}/include/main_callibri.h

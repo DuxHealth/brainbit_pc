@@ -1,5 +1,8 @@
 #include "main_callibri_em_st_artifacts.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleCallibriEmStArtifacts(Sensor* sensor_callibri)
 {
 	//Create custom object of EmStArtifacts
@@ -21,6 +24,9 @@ void SampleCallibriEmStArtifacts(Sensor* sensor_callibri)
 	//Set signal setting - CallibriSignalTypeECG
 	SignalTypeCallibri type = CallibriSignalTypeECG;
 	callibri->setSignalSettings(type);
+
+	//Set sampling rate to 250Hz
+	callibri->writeSamplingFrequency(SensorSamplingFrequency::FrequencyHz250);
 
 	//Add callback to get signal data and send to filter lib for convert raw data
 	callibri->AddSignalCallbackCallibri_EmStArtifacts(mathLib);
@@ -58,7 +64,7 @@ void SampleCallibriEmStArtifacts(Sensor* sensor_callibri)
 	}
 
 	//Wait 10 seconds to get signal data
-	Sleep(10000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -84,7 +90,7 @@ void SampleCallibriEmStArtifacts(Sensor* sensor_callibri)
 	callibri->RemoveSignalCallbackCallibri_EmStArtifacts();
 
 	//Wait 2 seconds
-	Sleep(2000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Print result of spectral data
 	mathLib->printResult();

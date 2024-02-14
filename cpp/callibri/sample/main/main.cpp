@@ -201,7 +201,7 @@ void CallibriSpectrumFunction()
 
 int main()
 {
-	CallibriSample code = CallibriSample::Callibri;
+	CallibriSample code = CallibriSample::Callibri_Filters;
 
 	switch (code)
 	{

@@ -1,5 +1,8 @@
 #include "main_callibri_spectrum.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleCallibriSpectrum(Sensor* sensor_callibri)
 {
 	//Create custom object of Spectrum
@@ -21,6 +24,9 @@ void SampleCallibriSpectrum(Sensor* sensor_callibri)
 	//Set signal setting - CallibriSignalTypeECG
 	SignalTypeCallibri type = CallibriSignalTypeECG;
 	callibri->setSignalSettings(type);
+
+	//Set sampling rate to 1000Hz
+	callibri->writeSamplingFrequency(SensorSamplingFrequency::FrequencyHz1000);
 
 	//Add callback to get signal data and convert to spectrum data
 	callibri->AddSignalCallbackCallibri_Spectrum(spectrumLib);
@@ -58,7 +64,7 @@ void SampleCallibriSpectrum(Sensor* sensor_callibri)
 	}
 
 	//Wait 1 second to get signal data
-	Sleep(1000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(1000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -84,7 +90,7 @@ void SampleCallibriSpectrum(Sensor* sensor_callibri)
 	callibri->RemoveSignalCallbackCallibri_Spectrum();
 
 	//Wait 2 seconds
-	Sleep(2000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Print result
 	spectrumLib->printResult();

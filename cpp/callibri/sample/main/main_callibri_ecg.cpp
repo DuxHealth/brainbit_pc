@@ -1,5 +1,8 @@
 #include "main_callibri_ecg.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleCallibriECG(Sensor* sensor_callibri)
 {
 	//Create custom object of CallibriECG
@@ -21,6 +24,9 @@ void SampleCallibriECG(Sensor* sensor_callibri)
 	//Set signal setting - CallibriSignalTypeECG
 	SignalTypeCallibri type = CallibriSignalTypeECG;
 	callibri->setSignalSettings(type);
+
+	//Set sampling rate to 1000Hz
+	callibri->writeSamplingFrequency(SensorSamplingFrequency::FrequencyHz1000);
 
 	//Add callback to get signal data and send to filter lib for convert raw data
 	callibri->AddSignalCallbackCallibri_Callibri_ECG(callibriMathLib);
@@ -58,7 +64,7 @@ void SampleCallibriECG(Sensor* sensor_callibri)
 	}
 
 	//Wait 10 seconds to get signal data
-	Sleep(10000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -84,7 +90,7 @@ void SampleCallibriECG(Sensor* sensor_callibri)
 	callibri->RemoveSignalCallbackCallibri_Callibri_ECG();
 
 	//Wait 2 seconds
-	Sleep(2000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Print result of ecg data
 	callibriMathLib->printResult();

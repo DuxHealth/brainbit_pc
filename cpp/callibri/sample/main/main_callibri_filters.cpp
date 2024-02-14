@@ -1,5 +1,8 @@
 #include "main_callibri_filters.h"
 
+#include <chrono>
+#include <thread>
+
 void SampleCallibriFilters(Sensor* sensor_callibri)
 {
 	//Create custom object of Filters
@@ -21,6 +24,9 @@ void SampleCallibriFilters(Sensor* sensor_callibri)
 	//Set signal setting - CallibriSignalTypeECG
 	SignalTypeCallibri type = CallibriSignalTypeECG;
 	callibri->setSignalSettings(type);
+
+	//Set sampling rate to 1000Hz
+	callibri->writeSamplingFrequency(SensorSamplingFrequency::FrequencyHz1000);
 
 	//Add callback to get signal data and send to filter lib for convert raw data
 	callibri->AddSignalCallbackCallibri_Filters(filtersLib);
@@ -58,7 +64,7 @@ void SampleCallibriFilters(Sensor* sensor_callibri)
 	}
 
 	//Wait 0.5 seconds to get signal data
-	Sleep(500);
+	std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
 	//Create SensorCommand to execuate it
 	SensorCommand command_stop_signal = CommandStopSignal;
@@ -84,7 +90,7 @@ void SampleCallibriFilters(Sensor* sensor_callibri)
 	callibri->RemoveSignalCallbackCallibri_Filters();
 
 	//Wait 2 seconds
-	Sleep(2000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(2000));
 
 	//Clear memory of object callibri
 	delete callibri;

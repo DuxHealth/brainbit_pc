@@ -51,8 +51,7 @@ void SampleCallibriFunction(Sensor* sensor_callibri)
 	//To get ADCInput of callibri use function 'readADCInput'
 	SensorADCInput adcInput = callibri->readADCInput();
 
-	//To get stimulation parameters of callibri use function 'readStimulatorParam'
-	CallibriStimulationParams stimulationParams = callibri->readStimulatorParam();
+	
 
 	//To execuate command we use function 'execCommand'.
 	//Before use this command you need to be sure,
@@ -64,6 +63,9 @@ void SampleCallibriFunction(Sensor* sensor_callibri)
 
 	if (isSupport)
 	{
+		//To get stimulation parameters of callibri use function 'readStimulatorParam'
+		CallibriStimulationParams stimulationParams = callibri->readStimulatorParam();
+
 		EConsole::PrintLog("[LOG] [This command is supported by device!");
 
 		//If this command is supported by device, you can execuate it

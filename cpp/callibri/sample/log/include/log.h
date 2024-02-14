@@ -10,7 +10,6 @@
 #include <iostream>
 #include <string>
 #include <ctime>
-#include <Windows.h>
 
 namespace EConsole
 {
@@ -60,41 +59,12 @@ namespace EConsole
 		return "";
 	}
 
-	//Print Now Time
-	inline bool PrintNowTime()
-	{
-		try
-		{
-			__time64_t long_time;
-			struct tm t_now;
-			errno_t err = localtime_s(&t_now, &long_time);
-
-			if(err)
-				throw std::invalid_argument("Invalid argument to _localtime64_s!");
-
-			std::cout << "[" << t_now.tm_year + 1900 << "-" 
-				<< _convertIntTimeToString(t_now.tm_mon) << "-" 
-				<< _convertIntTimeToString(t_now.tm_mday) << " " 
-				<< _convertIntTimeToString(t_now.tm_hour) << ":" 
-				<< _convertIntTimeToString(t_now.tm_min) << ":" 
-				<< _convertIntTimeToString(t_now.tm_sec) << "] ";
-
-			return true;
-		}
-		catch (...)
-		{
-			return false;
-		}
-		
-	}
-
 	//Print Error Text to Line
 	template<typename ... _TypeList>
 	bool PrintError(_TypeList ... List)
 	{
 		try
 		{
-			PrintNowTime();
 			std::cout << "[DEBUG LOG] [\x1B[31mERROR\033[0m] ";
 			const int _TestLixt[] = { (std::cout << List << std::endl, 0)... };
 			static_cast<void>(_TestLixt);
@@ -113,7 +83,6 @@ namespace EConsole
 	{
 		try
 		{
-			PrintNowTime();
 			std::cout << "[DEBUG LOG] [\x1B[94mDEBUG\033[0m] ";
 			const int _TestLixt[] = { (std::cout << List, 0)... };
 			static_cast<void>(_TestLixt);

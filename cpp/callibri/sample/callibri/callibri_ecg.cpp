@@ -45,13 +45,13 @@ bool SampleCallibri::RemoveSignalCallbackCallibri_Callibri_ECG()
 		if (_sensor == nullptr)
 			throw std::invalid_argument("Null sensor!");
 
-		if (_lSignalDataCallibriECGHandle == 0)
+		if (_lSignalDataCallibriECGHandle == nullptr)
 		{
 			throw std::invalid_argument("Null Signal Data for Callibri ECG handle!");
 		}
 
 		removeSignalCallbackCallibri(_lSignalDataCallibriECGHandle);
-		_lSignalDataCallibriECGHandle = 0;
+		_lSignalDataCallibriECGHandle = nullptr;
 
 		return true;
 	}

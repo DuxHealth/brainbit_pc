@@ -45,13 +45,13 @@ bool SampleCallibri::RemoveSignalCallbackCallibri_Filters()
 		if (_sensor == nullptr)
 			throw std::invalid_argument("Null sensor!");
 
-		if (_lSignalDataFiltersHandle == 0)
+		if (_lSignalDataFiltersHandle == nullptr)
 		{
 			throw std::invalid_argument("Null Signal Data for Filters handle!");
 		}
 
 		removeSignalCallbackCallibri(_lSignalDataFiltersHandle);
-		_lSignalDataFiltersHandle = 0;
+		_lSignalDataFiltersHandle = nullptr;
 
 		return true;
 	}

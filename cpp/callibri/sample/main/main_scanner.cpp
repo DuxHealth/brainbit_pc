@@ -1,5 +1,8 @@
 #include "main_scanner.h"
 
+#include <chrono>
+#include <thread>
+
 // =============
 // || SCANNER ||
 // =============
@@ -31,7 +34,7 @@ Sensor* SampleScannerFunction()
 	scanner->StartScanner();
 
 	//Wait 5 seconds to find devices
-	Sleep(5000);
+	std::this_thread::sleep_for(std::chrono::milliseconds(10000));
 
 	//Stop searching devices
 	scanner->StopScanner();
@@ -46,7 +49,7 @@ Sensor* SampleScannerFunction()
 	//Print information of all found devices
 	for (int i = 0; i < listDevices.size(); i++)
 	{
-		EConsole::PrintLog("[SENSOR] [NAME] : ", listDevices[i].Name, " [SERIAL NUMBERS] :", listDevices[i].SerialNumber, " [ADDRESS] :", listDevices[i].Address);
+		EConsole::PrintLog("[SENSOR] [NAME] : ", listDevices[i].Name, " [SERIAL NUMBER] :", listDevices[i].SerialNumber, " [ADDRESS] :", listDevices[i].Address);
 	}
 
 	//Create SensorInfo of first found device to create object of Sensor
