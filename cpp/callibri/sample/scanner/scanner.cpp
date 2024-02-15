@@ -471,14 +471,14 @@ Sensor* SampleScanner::CreateSensor(SensorInfo device)
 	{
 		//Print Error Message on Console.
 		EConsole::PrintScreen("[[ERROR : ", error.what(), " ]]");
-		//Return false value means our algorythm is working incorrect.
-		return false;
+		//Return false value means our algorithm is working incorrect.
+		return nullptr;
 	}
 	catch (...)
 	{
 		//Print Error Message on Console (unknown error).
 		EConsole::PrintScreen("[[ERROR : Invalid error! ]]");
-		//Return false value means our algorythm is working incorrect.
-		return false;
+		//Return false value means our algorithm is working incorrect.
+		return nullptr;
 	}
 }

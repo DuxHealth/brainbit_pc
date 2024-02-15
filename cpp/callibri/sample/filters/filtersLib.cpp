@@ -111,13 +111,13 @@ double FiltersLibSample::processElement(double elem)
 	{
 		//Print Error Message on Console.
 		EConsole::PrintScreen("[[ERROR : ", error.what(), " ]]");
-		return NULL;
+		return 0;
 	}
 	catch (...)
 	{
 		//Print Error Message on Console (unknown error).
 		EConsole::PrintScreen("[[ERROR : Invalid error! ]]");
-		return NULL;
+		return 0;
 	}
 }
 

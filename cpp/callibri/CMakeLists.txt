@@ -36,6 +36,7 @@ elseif (UNIX)
 	set(LIB_FILTERS "libfilters.so")
 	set(LIB_SPECTRUM "libspectrumlib.so")
 	set(LIB_CALLIBRI_ECG "libcallibri_utils.so")
+	set(LIB_EMOTIONS "libem_st_artifacts.so")
 endif()
 
 set(PRJ_VER_MAJOR 1)
