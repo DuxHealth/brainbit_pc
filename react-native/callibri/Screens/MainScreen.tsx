@@ -31,7 +31,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
           { key: 'Signal' },
           { key: 'Envelope' },
           { key: 'ECG' },
-          { key: 'EDA' },
+          { key: 'Tenzo' },
         ]}
         renderItem={
           ({ item }) =>
@@ -42,7 +42,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
             />
         } />
         
-      <Text>{`Connection state: ${SensorState[connected]} Battery:${power}`}</Text>
+      <Text style={{color: 'black'}}>{`Connection state: ${SensorState[connected]} Battery:${power}`}</Text>
     </View>
   );
 }

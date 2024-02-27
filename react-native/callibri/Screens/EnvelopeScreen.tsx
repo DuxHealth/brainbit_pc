@@ -53,7 +53,7 @@ export default function EnvelopeScreen({navigation} : NativeStackScreenProps<any
 
   function startEnvelope() {
     setIsEnvelope(!isEnvelope)
-    CallibriControllerInstance.configureForSignalType(CallibriSignalType.EMG)
+    // CallibriControllerInstance.configureForSignalType(CallibriSignalType.EMG)
     CallibriControllerInstance.envelopeReceivedCallback = (data) => {
       data.forEach((sample) => {
         samples.push(sample.Sample * 1e6)

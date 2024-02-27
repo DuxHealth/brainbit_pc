@@ -7,7 +7,7 @@ import SignalScreen from './Screens/SignalScreen';
 import SearchScreen from './Screens/SearchScreen';
 import EnvelopeScreen from './Screens/EnvelopeScreen';
 import ECGScreen from './Screens/ECGScreen';
-import EDAScreen from './Screens/EDAScreen';
+import TenzoScreen from './Screens/TenzoScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -21,7 +21,7 @@ function App() {
       <Stack.Screen name="Signal" component={SignalScreen} />
       <Stack.Screen name="Envelope" component={EnvelopeScreen} />
       <Stack.Screen name="ECG" component={ECGScreen} />
-      <Stack.Screen name="EDA" component={EDAScreen} />
+      <Stack.Screen name="Tenzo" component={TenzoScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

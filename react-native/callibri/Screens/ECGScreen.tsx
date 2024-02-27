@@ -145,20 +145,20 @@ export default function ECGScreen({ navigation }: NativeStackScreenProps<any>) {
     <View style={{ marginTop: 10 }}>
       <Button title={isSignal ? 'Stop' : 'Start'}
         onPress={() => { isSignal ? stopSignal() : startSignal() }} />
-          <Text style={{ marginTop: 10 }}>{`data pack len for ecg lib: ${ecgMathDataPackSize}`}</Text>
-          <Text style={{ marginTop: 10 }}>{`isRRdetected: ${isRRdetected}`}</Text>
+          <Text style={{ marginTop: 10, color: 'black' }}>{`data pack len for ecg lib: ${ecgMathDataPackSize}`}</Text>
+          <Text style={{ marginTop: 10, color: 'black' }}>{`isRRdetected: ${isRRdetected}`}</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>{`RR: ${RR}    `}</Text>
-          <Text>{`HR: ${HR}`}</Text>
+          <Text style={{color: 'black'}}>{`RR: ${RR}    `}</Text>
+          <Text style={{color: 'black'}}>{`HR: ${HR}`}</Text>
         </View>
-          <Text>{`pressureIndex: ${pressureIndex}`}</Text>
+          <Text style={{color: 'black'}}>{`pressureIndex: ${pressureIndex}`}</Text>
         <View style={{flexDirection: 'row'}}>
-          <Text>{`moda: ${moda}    `}</Text>
-          <Text>{`amplModa: ${amplModa}`}</Text>
+          <Text style={{color: 'black'}}>{`moda: ${moda}    `}</Text>
+          <Text style={{color: 'black'}}>{`amplModa: ${amplModa}`}</Text>
         </View>
         <View style={{flexDirection: 'row'}}>
-          <Text>{`variationDist: ${variationDist}    `}</Text>
-          <Text>{`isInitialSignalCorrupted: ${isInitialSignalCorrupted}`}</Text>
+          <Text style={{color: 'black'}}>{`variationDist: ${variationDist}    `}</Text>
+          <Text style={{color: 'black'}}>{`isInitialSignalCorrupted: ${isInitialSignalCorrupted}`}</Text>
         </View>
       <Text>{`Electrode state: ${CallibriElectrodeState[elState]}`}</Text>
     </View>

@@ -93,9 +93,8 @@ class CallibriController {
         this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz1000)
         this._sensor?.setHardwareFilters([SensorFilter.FilterHPFBwhLvl1CutoffFreq1Hz])
         break;
-      case CallibriSignalType.EDA:
+      case CallibriSignalType.TenzoBreathing:
         this._sensor?.setSamplingFrequency(SensorSamplingFrequency.FrequencyHz250)
-        this._sensor?.setExtSwInput(SensorExternalSwitchInput.ExtSwInUSB)
         break;
       case CallibriSignalType.ImpedanceBreathing:
         break;

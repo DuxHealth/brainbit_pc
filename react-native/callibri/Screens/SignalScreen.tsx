@@ -88,7 +88,7 @@ export default function SignalScreen({ navigation }: NativeStackScreenProps<any>
           svg={{ stroke: 'rgb(134, 65, 244)' }}
           contentInset={{ top: 20, bottom: 20 }}>
           <Grid /></LineChart>
-      <Text>{`Electrode state: ${CallibriElectrodeState[elState]}`}</Text>
+      <Text style={{color: 'black'}}>{`Electrode state: ${CallibriElectrodeState[elState]}`}</Text>
     </View>
   );
 }

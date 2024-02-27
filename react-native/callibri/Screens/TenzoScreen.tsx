@@ -10,7 +10,7 @@ const window: number = 250 * 20;
 var samples = new Array<number>()
 const buffer = Array(window).fill(0)
 
-export default function EDAScreen({ navigation }: NativeStackScreenProps<any>) {
+export default function TenzoScreen({ navigation }: NativeStackScreenProps<any>) {
 
   const [isSignal, setIsSignal] = useState(false)
   const [elState, setElState] = useState(CallibriElectrodeState.Detached)
@@ -52,7 +52,7 @@ export default function EDAScreen({ navigation }: NativeStackScreenProps<any>) {
 
   function startSignal() {
     setIsSignal(!isSignal)
-    CallibriControllerInstance.configureForSignalType(CallibriSignalType.EDA)
+    CallibriControllerInstance.configureForSignalType(CallibriSignalType.TenzoBreathing)
     
     CallibriControllerInstance.electrodeChangedCallback = (state) => {
       setElState(state)
@@ -86,7 +86,7 @@ export default function EDAScreen({ navigation }: NativeStackScreenProps<any>) {
           svg={{ stroke: 'rgb(134, 65, 244)' }}
           contentInset={{ top: 20, bottom: 20 }}>
           <Grid /></LineChart>
-      <Text>{`Electrode state: ${CallibriElectrodeState[elState]}`}</Text>
+      <Text style={{color: 'black'}}>{`Electrode state: ${CallibriElectrodeState[elState]}`}</Text>
     </View>
   );
 }
