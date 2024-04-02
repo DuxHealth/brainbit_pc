@@ -39,7 +39,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
               onPress={() => navigation.navigate(item.key)}
             />
         } />
-        <Text>{`Connection state: ${SensorState[connected]} Battery:${power}`}</Text>
+        <Text style={{color: 'black'}}>{`Connection state: ${SensorState[connected]} Battery:${power}`}</Text>
     </View>
   );
 }
