@@ -36,11 +36,11 @@ export default function ResistanceScreen({navigation} : NativeStackScreenProps<a
     <View style={{ marginTop: 10 }}>
       <Button title={isResist ? 'Stop' : 'Start'}
         onPress={() => { isResist ? stopResist() : startResist() }} />
-      <Text>{`PackNum: ${resist?.PackNum}`}</Text>
-      <Text>{`Samples: ${resist?.Samples.map((sample, i) => {
+      <Text style={{color: 'black'}}>{`PackNum: ${resist?.PackNum}`}</Text>
+      <Text style={{color: 'black'}}>{`Samples: ${resist?.Samples.map((sample, i) => {
               return `\n      ${i}: ${sample} `
             })}`}</Text>
-      <Text>{`Referents: ${resist?.Referents.map((ref, i) => {
+      <Text style={{color: 'black'}}>{`Referents: ${resist?.Referents.map((ref, i) => {
               return `\n      ${i}: ${ref} `
             })}`}</Text>
     </View>

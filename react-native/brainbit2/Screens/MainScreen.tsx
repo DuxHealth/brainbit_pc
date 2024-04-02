@@ -6,7 +6,7 @@ import { SensorState } from 'react-native-neurosdk2';
 
 function MainScreen({ navigation }: NativeStackScreenProps<any>) {
 
-  const [connected, setConnected] = useState(SensorState.OutRange)
+  const [connected, setConnected] = useState(SensorState.OutOfRange)
   const [power, setPower] = useState(0)
 
   BBControllerInstance.connectionChangedCallback = (state)=>{
@@ -34,7 +34,7 @@ function MainScreen({ navigation }: NativeStackScreenProps<any>) {
         renderItem={
           ({ item }) =>
             <Button
-              disabled={connected === SensorState.OutRange}
+              disabled={connected === SensorState.OutOfRange}
               title={item.key}
               onPress={() => navigation.navigate(item.key)}
             />
