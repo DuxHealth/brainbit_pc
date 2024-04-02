@@ -1,4 +1,4 @@
-import { Scanner, SensorInfo, SensorFamily, BrainBit2Sensor, SensorState, SignalChannelsData, ResistRefChannelsData, BrainBit2ChannelMode, EEGChannelType, SensorCommand, SensorFeature, SensorParameter, SensorParamAccess, SensorFirmwareMode, SensorDataOffset, SensorGain, SensorSamplingFrequency } from "react-native-neurosdk2";
+import { Scanner, SensorInfo, SensorFamily, BrainBit2Sensor, SensorState, BrainBit2AmplifierParam, GenCurrent, SignalChannelsData, ResistRefChannelsData, BrainBit2ChannelMode, EEGChannelType, SensorCommand, SensorFeature, SensorParameter, SensorParamAccess, SensorFirmwareMode, SensorDataOffset, SensorGain, SensorSamplingFrequency } from "react-native-neurosdk2";
 import { PermissionsAndroid, Platform } from 'react-native';
 
 let instance: BrainBitController;
@@ -92,6 +92,16 @@ class BrainBitController {
       this._scanner?.createSensor(info)
         .then((sensor) => {
           this._sensor = sensor as BrainBit2Sensor
+
+          let chCount = this._sensor.getChannelsCount();
+          let bb2ampParam: BrainBit2AmplifierParam = {
+            Current: GenCurrent.GenCurr6nA,
+            ChSignalMode: Array(chCount).fill(BrainBit2ChannelMode.ChModeNormal),
+            ChResistUse: Array(chCount).fill(true),
+            ChGain: Array(chCount).fill(SensorGain.Gain6),
+          };
+          this._sensor.setAmplifierParam(bb2ampParam);
+
           this._sensor.AddConnectionChanged((state) => { 
             if(this.connectionChangedCallback != undefined)
               this.connectionChangedCallback(state); 
