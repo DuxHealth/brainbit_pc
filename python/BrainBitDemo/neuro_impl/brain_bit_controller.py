@@ -72,7 +72,8 @@ class BrainBitController(QObject):
         self.thread.start()
 
     def disconnect_sensor(self):
-        self.__sensor.disconnect()
+        if self.__sensor:
+            self.__sensor.disconnect()
 
     def __connection_state_changed(self, sensor: Sensor, state: SensorState):
         if self.sensorConnectionState is not None:

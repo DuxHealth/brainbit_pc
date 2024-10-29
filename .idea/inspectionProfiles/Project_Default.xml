@@ -1,0 +1,76 @@
+<component name="InspectionProjectProfileManager">
+  <profile version="1.0">
+    <option name="myName" value="Project Default" />
+    <inspection_tool class="PyPep8NamingInspection" enabled="true" level="WEAK WARNING" enabled_by_default="true">
+      <option name="ignoredErrors">
+        <list>
+          <option value="N806" />
+          <option value="N802" />
+        </list>
+      </option>
+    </inspection_tool>
+    <inspection_tool class="PyUnresolvedReferencesInspection" enabled="true" level="WARNING" enabled_by_default="true">
+      <option name="ignoredIdentifiers">
+        <list>
+          <option value="Discriminator_NY_vs_Mobile.models.torch" />
+          <option value="torch" />
+          <option value="Discriminator_NY_vs_Mobile.Main_discriminator.class_counts" />
+          <option value="Discriminator_NY_vs_Mobile.Main_discriminator.training" />
+          <option value="Discriminator_NY_vs_Mobile.Main_discriminator.torch" />
+          <option value="Discriminator_NY_vs_Mobile.Main_discriminator.matplotlib" />
+          <option value="NY_database_dataloader" />
+          <option value="transforms" />
+          <option value="cv2" />
+          <option value="numpy" />
+          <option value="ECG_source_indifferency.transforms.torch" />
+          <option value="bool.to" />
+          <option value="ECG_source_indifferency.training.torch" />
+          <option value="ECG_source_indifferency.ECG_Dataloader_long_records.wfdb" />
+          <option value="ECG_source_indifferency.ECG_Dataloader_long_records.scipy" />
+          <option value="pandas" />
+          <option value="h5py" />
+          <option value="ECG_source_indifferency.ECG_Dataloader_long_records.matplotlib" />
+          <option value="ECG_source_indifferency.ECG_Dataloader_long_records.torch" />
+          <option value="ECG_multi_lead_dataloader" />
+          <option value="ECG_source_indifferency.THEW_DB_file_uploader.scipy" />
+          <option value="ECG_source_indifferency.models.torch" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.test_Joined_Rus_DB" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.h5py" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.dataset_name" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader._classifications" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.store_russian_data_batch" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.load_12ECG_model" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.scipy" />
+          <option value="ECG_source_indifferency.Russian_DB_file_uploader.run_12ECG_classifier" />
+          <option value="ECG_source_indifferency.Discriminator.challenge_score" />
+          <option value="ECG_source_indifferency.Discriminator.torch" />
+          <option value="ECG_source_indifferency.Discriminator.matplotlib" />
+          <option value="Trace_classifier.Utils.scipy" />
+          <option value="Trace_classifier.Utils.matplotlib" />
+          <option value="Trace_classifier.Image_processing_engine.sklearn" />
+          <option value="Trace_classifier.Image_processing_engine.scipy" />
+          <option value="Trace_classifier.Image_processing_engine.matplotlib" />
+          <option value="pytesseract" />
+          <option value="NY_Classifier.Sampler_test.torch" />
+          <option value="NY_Classifier.transforms.torch" />
+          <option value="int.backward" />
+          <option value="NY_Classifier.train_results.BatchResult.loss_t" />
+          <option value="NY_Classifier.train_results.BatchResult.loss_s" />
+          <option value="NY_Classifier.train_results.BatchResult.attention_score" />
+          <option value="NY_Classifier.train_results.BatchResult.is_adversarial_engaged" />
+          <option value="NY_Classifier.train_results.BatchResult.num_FN_target" />
+          <option value="NY_Classifier.train_results.BatchResult.num_FP_target" />
+          <option value="NY_Classifier.train_results.BatchResult.num_TN_target" />
+          <option value="NY_Classifier.train_results.BatchResult.num_TP_target" />
+          <option value="NY_Classifier.train_results.BatchResult.num_FN_source" />
+          <option value="NY_Classifier.train_results.BatchResult.num_FP_source" />
+          <option value="NY_Classifier.train_results.BatchResult.num_TN_source" />
+          <option value="NY_Classifier.train_results.BatchResult.num_TP_source" />
+          <option value="NY_Classifier.train_results.BatchResult.num_correct_target" />
+          <option value="NY_Classifier.train_results.BatchResult.num_correct_source" />
+          <option value="NY_Classifier.train_results.BatchResult.out_target" />
+        </list>
+      </option>
+    </inspection_tool>
+  </profile>
+</component>

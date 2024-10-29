@@ -1,4 +1,3 @@
-
 from neurosdk.scanner import Scanner
 from em_st_artifacts.utils import lib_settings
 from em_st_artifacts.utils import support_classes
@@ -11,33 +10,33 @@ from time import sleep
 
 def sensor_found(scanner, sensors):
     for index in range(len(sensors)):
-        print('Sensor found: %s' % sensors[index])
+        print("Sensor found: %s" % sensors[index])
 
 
 def on_sensor_state_changed(sensor, state):
-    print('Sensor {0} is {1}'.format(sensor.name, state))
+    print("Sensor {0} is {1}".format(sensor.name, state))
 
 
 def on_battery_changed(sensor, battery):
-    print('Battery: {0}'.format(battery))
+    print("Battery: {0}".format(battery))
 
 
 def on_signal_received(sensor, data):
     raw_channels = []
     for sample in data:
-        left_bipolar = sample.T3-sample.O1
-        right_bipolar = sample.T4-sample.O2
+        left_bipolar = sample.T3 - sample.O1
+        right_bipolar = sample.T4 - sample.O2
         raw_channels.append(support_classes.RawChannels(left_bipolar, right_bipolar))
 
     math.push_data(raw_channels)
     math.process_data_arr()
     if not math.calibration_finished():
-        print(f'Artifacted: {math.is_both_sides_artifacted()}')
-        print(f'Calibration percents: {math.get_calibration_percents()}')
+        print(f"Artifacted: {math.is_both_sides_artifacted()}")
+        print(f"Calibration percents: {math.get_calibration_percents()}")
     else:
-        print(f'Artifacted: {math.is_artifacted_sequence()}')
-        print(f'Mental data: {math.read_mental_data_arr()}')
-        print(f'Spectral data: {math.read_spectral_data_percents_arr()}')
+        print(f"Artifacted: {math.is_artifacted_sequence()}")
+        print(f"Mental data: {math.read_mental_data_arr()}")
+        print(f"Spectral data: {math.read_spectral_data_percents_arr()}")
 
     print(data)
 
@@ -56,10 +55,8 @@ try:
         current_sensor_info = sensorsInfo[i]
         print(sensorsInfo[i])
 
-
         def device_connection(sensor_info):
             return scanner.create_sensor(sensor_info)
-
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(device_connection, current_sensor_info)
@@ -72,19 +69,22 @@ try:
         if sensor.is_supported_feature(SensorFeature.Signal):
             sensor.signalDataReceived = on_signal_received
 
-
         # init emotions lib
         calibration_length = 8
         nwins_skip_after_artifact = 10
 
-        mls = lib_settings.MathLibSetting(sampling_rate=250,
-                             process_win_freq=25,
-                             fft_window=1000,
-                             n_first_sec_skipped=4,
-                             bipolar_mode=True,
-                             channels_number=4,
-                             channel_for_analysis=3)
-        ads = lib_settings.ArtifactDetectSetting(hanning_win_spectrum=True, num_wins_for_quality_avg=125)
+        mls = lib_settings.MathLibSetting(
+            sampling_rate=250,
+            process_win_freq=25,
+            fft_window=1000,
+            n_first_sec_skipped=4,
+            bipolar_mode=True,
+            channels_number=4,
+            channel_for_analysis=3,
+        )
+        ads = lib_settings.ArtifactDetectSetting(
+            hanning_win_spectrum=True, num_wins_for_quality_avg=125
+        )
         sads = lib_settings.ShortArtifactDetectSetting(ampl_art_extremum_border=25)
         mss = lib_settings.MentalAndSpectralSetting()
 
@@ -109,6 +109,6 @@ try:
         del math
 
     del scanner
-    print('Remove scanner')
+    print("Remove scanner")
 except Exception as err:
     print(err)

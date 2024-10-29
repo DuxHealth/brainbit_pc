@@ -1,4 +1,3 @@
-
 from neurosdk.scanner import Scanner
 from filters_lib import filters_sdk, filter_types
 from em_st_artifacts.utils import lib_settings
@@ -13,15 +12,15 @@ flist = filters_sdk.FilterList()
 
 def sensor_found(scanner, sensors):
     for index in range(len(sensors)):
-        print('Sensor found: %s' % sensors[index])
+        print("Sensor found: %s" % sensors[index])
 
 
 def on_sensor_state_changed(sensor, state):
-    print('Sensor {0} is {1}'.format(sensor.name, state))
+    print("Sensor {0} is {1}".format(sensor.name, state))
 
 
 def on_battery_changed(sensor, battery):
-    print('Battery: {0}'.format(battery))
+    print("Battery: {0}".format(battery))
 
 
 def on_signal_received(sensor, data):
@@ -53,10 +52,8 @@ try:
         current_sensor_info = sensorsInfo[i]
         print(sensorsInfo[i])
 
-
         def device_connection(sensor_info):
             return scanner.create_sensor(sensor_info)
-
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(device_connection, current_sensor_info)
@@ -71,13 +68,19 @@ try:
 
         # filters setup
         f1 = filters_sdk.Filter()
-        f1.init_by_param(filter_types.FilterParam(filter_types.FilterType.ft_band_stop, 250, 60))
+        f1.init_by_param(
+            filter_types.FilterParam(filter_types.FilterType.ft_band_stop, 250, 60)
+        )
 
         f2 = filters_sdk.Filter()
-        f2.init_by_param(filter_types.FilterParam(filter_types.FilterType.ft_band_stop, 250, 50))
+        f2.init_by_param(
+            filter_types.FilterParam(filter_types.FilterType.ft_band_stop, 250, 50)
+        )
 
         f3 = filters_sdk.Filter()
-        f3.init_by_param(filter_types.FilterParam(filter_types.FilterType.ft_lp, 250, 1))
+        f3.init_by_param(
+            filter_types.FilterParam(filter_types.FilterType.ft_lp, 250, 1)
+        )
 
         flist.add_filter(f1)
         flist.add_filter(f2)
@@ -87,15 +90,19 @@ try:
         calibration_length = 8
         nwins_skip_after_artifact = 10
 
-        mls = lib_settings.MathLibSetting(sampling_rate=250,
-                             process_win_freq=25,
-                             fft_window=1000,
-                             n_first_sec_skipped=4,
-                             bipolar_mode=False,
-                             channels_number=4,
-                             channel_for_analysis=3)
+        mls = lib_settings.MathLibSetting(
+            sampling_rate=250,
+            process_win_freq=25,
+            fft_window=1000,
+            n_first_sec_skipped=4,
+            bipolar_mode=False,
+            channels_number=4,
+            channel_for_analysis=3,
+        )
 
-        ads = lib_settings.ArtifactDetectSetting(hanning_win_spectrum=True, num_wins_for_quality_avg=125)
+        ads = lib_settings.ArtifactDetectSetting(
+            hanning_win_spectrum=True, num_wins_for_quality_avg=125
+        )
 
         sads = lib_settings.ShortArtifactDetectSetting(ampl_art_extremum_border=25)
 
@@ -120,6 +127,6 @@ try:
         del sensor
 
     del scanner
-    print('Remove scanner')
+    print("Remove scanner")
 except Exception as err:
     print(err)

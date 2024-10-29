@@ -12,15 +12,15 @@ signal_data = queue.Queue()  # max size 100
 
 def sensor_found(scanner, sensors):
     for index in range(len(sensors)):
-        print('Sensor found: %s' % sensors[index])
+        print("Sensor found: %s" % sensors[index])
 
 
 def on_battery_changed(sensor, battery):
-    print('Battery: {0}'.format(battery))
+    print("Battery: {0}".format(battery))
 
 
 def on_sensor_state_changed(sensor, state):
-    print('Sensor {0} is {1}'.format(sensor.name, state))
+    print("Sensor {0} is {1}".format(sensor.name, state))
 
 
 def on_electrodes_state_changed(sensor, data):
@@ -58,10 +58,8 @@ try:
         current_sensor_info = sensorsInfo[0]
         print(sensorsInfo[0])
 
-
         def device_connection(sensor_info):
             return scanner.create_sensor(sensor_info)
-
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(device_connection, current_sensor_info)
@@ -78,9 +76,11 @@ try:
         sensor.sampling_frequency = SensorSamplingFrequency.FrequencyHz1000
 
         # Filter setting
-        sensor.hardware_filters = [SensorFilter.LPFBwhLvl2CutoffFreq400H,
-                                   SensorFilter.BSFBwhLvl2CutoffFreq55_65Hz,
-                                   SensorFilter.HPFBwhLvl2CutoffFreq10Hz]
+        sensor.hardware_filters = [
+            SensorFilter.LPFBwhLvl2CutoffFreq400H,
+            SensorFilter.BSFBwhLvl2CutoffFreq55_65Hz,
+            SensorFilter.HPFBwhLvl2CutoffFreq10Hz,
+        ]
 
         # Input type setting
         sensor.ext_sw_input = SensorExternalSwitchInput.MioElectrodes
@@ -111,7 +111,7 @@ try:
         sensor.disconnect()
         del sensor
 
-    print('Remove scanner')
+    print("Remove scanner")
     del scanner
 except Exception as err:
     print(err)

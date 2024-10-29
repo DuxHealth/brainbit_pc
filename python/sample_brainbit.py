@@ -7,15 +7,15 @@ from time import sleep
 
 def sensor_found(scanner, sensors):
     for index in range(len(sensors)):
-        print('Sensor found: %s' % sensors[index])
+        print("Sensor found: %s" % sensors[index])
 
 
 def on_sensor_state_changed(sensor, state):
-    print('Sensor {0} is {1}'.format(sensor.name, state))
+    print("Sensor {0} is {1}".format(sensor.name, state))
 
 
 def on_battery_changed(sensor, battery):
-    print('Battery: {0}'.format(battery))
+    print("Battery: {0}".format(battery))
 
 
 def on_signal_received(sensor, data):
@@ -52,10 +52,8 @@ try:
         current_sensor_info = sensorsInfo[i]
         print(sensorsInfo[i])
 
-
         def device_connection(sensor_info):
             return scanner.create_sensor(sensor_info)
-
 
         with concurrent.futures.ThreadPoolExecutor() as executor:
             future = executor.submit(device_connection, current_sensor_info)
@@ -137,6 +135,6 @@ try:
         del sensor
 
     del scanner
-    print('Remove scanner')
+    print("Remove scanner")
 except Exception as err:
     print(err)

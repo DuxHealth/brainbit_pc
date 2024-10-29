@@ -1,6 +1,12 @@
 import sys
+import threading
+from collections import deque
+from datetime import datetime
+from time import sleep
 
-from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget, QWidget
+import numpy as np
+import pyedflib
+from PyQt6.QtWidgets import QApplication, QMainWindow, QStackedWidget
 from PyQt6.uic import loadUi
 from neurosdk.cmn_types import SensorState
 
@@ -9,6 +15,17 @@ from neuro_impl.emotions_bipolar_controller import EmotionBipolar
 from neuro_impl.emotions_monopolar_controller import EmotionMonopolar
 from neuro_impl.spectrum_controller import SpectrumController
 from ui.plots import SpectrumPlot, SignalPlot
+
+
+FILE_PREFIX = "EEG_Session"
+CHANNELS = ["O1", "O2", "T3", "T4"]
+DIMENSION = "uV"
+SAMPLE_RATE = 250
+RANGE = 0.4  # V
+PHYSICAL_MIN = -int(RANGE*1e6)
+PHYSICAL_MAX = int(RANGE*1e6)
+DIGITAL_MIN = -(2 ** 23 - 1)
+DIGITAL_MAX = 2 ** 23 - 1
 
 
 class MenuScreen(QMainWindow):
@@ -75,31 +92,37 @@ class SearchScreen(QMainWindow):
     def __sensors_founded(self, sensors):
         self.sensorsList = sensors
         self.listWidget.clear()
-        self.listWidget.addItems([sens.Name + ' (' + sens.SerialNumber + ')' for sens in sensors])
+        self.listWidget.addItems(
+            [sens.Name + " (" + sens.SerialNumber + ")" for sens in sensors]
+        )
 
     def __connect_to_sensor(self, item):
         item_number = self.listWidget.row(item)
         brain_bit_controller.sensorConnectionState.connect(self.__is_sensor_connected)
-        brain_bit_controller.create_and_connect(sensor_info=self.sensorsList[item_number])
+        brain_bit_controller.create_and_connect(
+            sensor_info=self.sensorsList[item_number]
+        )
 
     def __is_sensor_connected(self, sensor_state):
         self.__close_screen()
 
     def __start_scan(self):
-        self.searchButton.setText('Stop')
+        self.searchButton.setText("Stop")
         brain_bit_controller.sensorsFounded = self.__sensors_founded
         brain_bit_controller.start_scan()
         self.is_searching = True
 
     def __stop_scan(self):
-        self.searchButton.setText('Search')
+        self.searchButton.setText("Search")
         brain_bit_controller.stop_scan()
         brain_bit_controller.sensorsFounded = None
         self.is_searching = False
 
     def __close_screen(self):
         try:
-            brain_bit_controller.sensorConnectionState.disconnect(self.__is_sensor_connected)
+            brain_bit_controller.sensorConnectionState.disconnect(
+                self.__is_sensor_connected
+            )
         except Exception as err:
             print(err)
         self.__stop_scan()
@@ -112,7 +135,7 @@ class ResistanceScreen(QMainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         loadUi("ui/ResistanceScreenUI.ui", self)
-        self.resistButton.setText('Start')
+        self.resistButton.setText("Start")
         self.backButton.clicked.connect(self.__close_screen)
         self.resistButton.clicked.connect(self.__resist_button_clicked)
         brain_bit_controller.resistReceived = self.resist_received
@@ -126,26 +149,42 @@ class ResistanceScreen(QMainWindow):
             self.__start_resist()
 
     def __start_resist(self):
-        self.resistButton.setText('Stop')
+        self.resistButton.setText("Stop")
         brain_bit_controller.resistReceived = self.resist_received
         brain_bit_controller.start_resist()
         self.__is_started = True
 
     def __stop_resist(self):
-        self.resistButton.setText('Start')
+        self.resistButton.setText("Start")
         brain_bit_controller.stop_resist()
         brain_bit_controller.resistReceived = None
         self.__is_started = False
 
     def resist_received(self, resist):
         self.o1Value.setText(str(resist.O1))
-        self.o1Q.setText('Good' if resist.O1 != float('inf') and resist.O1 > self.normal_resist_border else 'Poor')
+        self.o1Q.setText(
+            "Good"
+            if resist.O1 != float("inf") and resist.O1 > self.normal_resist_border
+            else "Poor"
+        )
         self.o2Value.setText(str(resist.O2))
-        self.o2Q.setText('Good' if resist.O2 != float('inf') and resist.O2 > self.normal_resist_border else 'Poor')
+        self.o2Q.setText(
+            "Good"
+            if resist.O2 != float("inf") and resist.O2 > self.normal_resist_border
+            else "Poor"
+        )
         self.t3Value.setText(str(resist.T3))
-        self.t3Q.setText('Good' if resist.T3 != float('inf') and resist.T3 > self.normal_resist_border else 'Poor')
+        self.t3Q.setText(
+            "Good"
+            if resist.T3 != float("inf") and resist.T3 > self.normal_resist_border
+            else "Poor"
+        )
         self.t4Value.setText(str(resist.T4))
-        self.t4Q.setText('Good' if resist.T4 != float('inf') and resist.T4 > self.normal_resist_border else 'Poor')
+        self.t4Q.setText(
+            "Good"
+            if resist.T4 != float("inf") and resist.T4 > self.normal_resist_border
+            else "Poor"
+        )
 
     def __close_screen(self):
         self.__stop_resist()
@@ -168,6 +207,14 @@ class SignalScreen(QMainWindow):
         self.signalScreenLayout.addWidget(self.t3Graph)
         self.signalScreenLayout.addWidget(self.t4Graph)
 
+        # A buffer for storing the signal
+        self.file = None
+        self.buffer = deque()
+        self.np_buffer = deque()
+        self.lock = threading.Lock()
+
+        self.start_time = None
+
         self.__is_started = False
 
     def __start_button_clicked(self):
@@ -177,6 +224,13 @@ class SignalScreen(QMainWindow):
             self.__start_signal()
 
     def signal_received(self, signal):
+        if not self.start_time:
+            self.start_time = datetime.now()
+
+        with self.lock:
+            self.buffer.extend(signal)
+            print("Buffer size:", len(self.buffer))
+
         o1Samples = [sample.O1 for sample in signal]
         o2Samples = [sample.O2 for sample in signal]
         t3Samples = [sample.T3 for sample in signal]
@@ -187,7 +241,27 @@ class SignalScreen(QMainWindow):
         self.t4Graph.update_data(t4Samples)
 
     def __start_signal(self):
-        self.signalButton.setText('Stop')
+        self.signalButton.setText("Stop")
+
+        # Create a new file
+        timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
+        filename = f"{FILE_PREFIX}_{timestamp}.edf"
+        self.file = pyedflib.EdfWriter(filename, 4, file_type=pyedflib.FILETYPE_BDFPLUS)
+        self.file.setSignalHeaders(
+            [
+                {
+                    "label": channel,
+                    "dimension": DIMENSION,
+                    "sample_rate": SAMPLE_RATE,
+                    "physical_min": PHYSICAL_MIN,
+                    "physical_max": PHYSICAL_MAX,
+                    "digital_min": DIGITAL_MIN,
+                    "digital_max": DIGITAL_MAX,
+                }
+                for channel in CHANNELS
+            ]
+        )
+
         self.o1Graph.start_draw()
         self.o2Graph.start_draw()
         self.t3Graph.start_draw()
@@ -196,8 +270,10 @@ class SignalScreen(QMainWindow):
         brain_bit_controller.start_signal()
         self.__is_started = True
 
+        threading.Thread(target=self.write_data_to_buffer).start()
+
     def __stop_signal(self):
-        self.signalButton.setText('Start')
+        self.signalButton.setText("Start")
         self.o1Graph.stop_draw()
         self.o2Graph.stop_draw()
         self.t3Graph.stop_draw()
@@ -205,6 +281,29 @@ class SignalScreen(QMainWindow):
         brain_bit_controller.stop_signal()
         brain_bit_controller.resistReceived = None
         self.__is_started = False
+
+        # Close the file
+        sleep(0.15)
+        signal_array = np.array(self.np_buffer)
+        np.save(f"{self.file.path[:-4]}.npy", signal_array)
+        if self.file:
+            self.file.setStartdatetime(self.start_time)
+            c = (DIGITAL_MAX * signal_array / RANGE).astype(int).T
+            self.file.writeSamples(np.ascontiguousarray(c), digital=True)
+            self.file.close()
+            self.file = None
+            sleep(4)
+            quit()
+
+    def write_data_to_buffer(self):
+        while self.__is_started or self.buffer:
+            if self.buffer:
+                with self.lock:
+                    data_to_write = [self.buffer.popleft() for _ in range(len(self.buffer))]
+                data_list = [[sample.O1, sample.O2, sample.T3, sample.T4] for sample in data_to_write]
+                self.np_buffer.extend(data_list)
+            else:
+                sleep(0.1)  # Sleep to reduce CPU usage when buffer is empty
 
     def __close_screen(self):
         self.__stop_signal()
@@ -220,10 +319,16 @@ class EmotionBipolarScreen(QMainWindow):
 
         self.emotionController = EmotionBipolar()
         self.emotionController.progressCalibrationCallback = self.calibration_callback
-        self.emotionController.isArtifactedSequenceCallback = self.is_artifacted_sequence_callback
-        self.emotionController.isBothSidesArtifactedCallback = self.is_both_sides_artifacted_callback
+        self.emotionController.isArtifactedSequenceCallback = (
+            self.is_artifacted_sequence_callback
+        )
+        self.emotionController.isBothSidesArtifactedCallback = (
+            self.is_both_sides_artifacted_callback
+        )
         self.emotionController.lastMindDataCallback = self.mind_data_callback
-        self.emotionController.lastSpectralDataCallback = self.last_spectral_data_callback
+        self.emotionController.lastSpectralDataCallback = (
+            self.last_spectral_data_callback
+        )
         self.emotionController.rawSpectralDataCallback = self.raw_spectral_data_callback
 
         self.is_started = False
@@ -235,14 +340,14 @@ class EmotionBipolarScreen(QMainWindow):
             self.__start_signal()
 
     def __start_signal(self):
-        self.startBipolarEmotionButton.setText('Stop')
+        self.startBipolarEmotionButton.setText("Stop")
         self.emotionController.start_calibration()
         brain_bit_controller.signalReceived = self.emotionController.process_data
         brain_bit_controller.start_signal()
         self.is_started = True
 
     def __stop_signal(self):
-        self.startBipolarEmotionButton.setText('Start')
+        self.startBipolarEmotionButton.setText("Start")
         brain_bit_controller.stop_signal()
         brain_bit_controller.signalReceived = None
         self.is_started = False
@@ -251,10 +356,10 @@ class EmotionBipolarScreen(QMainWindow):
         self.calibrationProgress.setValue(progress)
 
     def is_artifacted_sequence_callback(self, artifacted):
-        self.artSequenceLabel.setText('Artefacted sequence: ' + str(artifacted))
+        self.artSequenceLabel.setText("Artefacted sequence: " + str(artifacted))
 
     def is_both_sides_artifacted_callback(self, artifacted):
-        self.artBothSidesLabel.setText('Artefacted both side: ' + str(artifacted))
+        self.artBothSidesLabel.setText("Artefacted both side: " + str(artifacted))
 
     def mind_data_callback(self, data):
         self.attentionPercentLabel.setText(str(round(data.rel_attention, 2)))
@@ -263,11 +368,11 @@ class EmotionBipolarScreen(QMainWindow):
         self.relaxRawLabel.setText(str(round(data.inst_relaxation, 2)))
 
     def last_spectral_data_callback(self, spectral_data):
-        self.deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + '%')
-        self.thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + '%')
-        self.alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + '%')
-        self.betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + '%')
-        self.gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + '%')
+        self.deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + "%")
+        self.thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + "%")
+        self.alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + "%")
+        self.betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + "%")
+        self.gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + "%")
 
     def raw_spectral_data_callback(self, spect_vals):
         self.alphaRawLabel.setText(str(round(spect_vals.alpha, 2)))
@@ -288,10 +393,16 @@ class EmotionMonopolarScreen(QMainWindow):
 
         self.emotionController = EmotionMonopolar()
         self.emotionController.progressCalibrationCallback = self.calibration_callback
-        self.emotionController.isArtifactedSequenceCallback = self.is_artifacted_sequence_callback
-        self.emotionController.isBothSidesArtifactedCallback = self.is_both_sides_artifacted_callback
+        self.emotionController.isArtifactedSequenceCallback = (
+            self.is_artifacted_sequence_callback
+        )
+        self.emotionController.isBothSidesArtifactedCallback = (
+            self.is_both_sides_artifacted_callback
+        )
         self.emotionController.lastMindDataCallback = self.mind_data_callback
-        self.emotionController.lastSpectralDataCallback = self.last_spectral_data_callback
+        self.emotionController.lastSpectralDataCallback = (
+            self.last_spectral_data_callback
+        )
         self.emotionController.rawSpectralDataCallback = self.raw_spectral_data_callback
 
     def __start_calibration(self):
@@ -301,127 +412,183 @@ class EmotionMonopolarScreen(QMainWindow):
             self.__start_signal()
 
     def __start_signal(self):
-        self.startEmotionButton.setText('Stop')
+        self.startEmotionButton.setText("Stop")
         self.emotionController.start_calibration()
         brain_bit_controller.signalReceived = self.emotionController.process_data
         brain_bit_controller.start_signal()
         self.is_started = True
 
     def __stop_signal(self):
-        self.startEmotionButton.setText('Start')
+        self.startEmotionButton.setText("Start")
         brain_bit_controller.stop_signal()
         brain_bit_controller.signalReceived = None
         self.is_started = False
 
     def calibration_callback(self, progress, channel):
         match channel:
-            case 'O1':
+            case "O1":
                 self.o1calibrationProgress.setValue(progress)
-            case 'O2':
+            case "O2":
                 self.o2calibrationProgress.setValue(progress)
-            case 'T3':
+            case "T3":
                 self.t3calibrationProgress.setValue(progress)
-            case 'T4':
+            case "T4":
                 self.t4calibrationProgress.setValue(progress)
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def is_artifacted_sequence_callback(self, artifacted, channel):
         match channel:
-            case 'O1':
-                self.o1artSequenceLabel.setText('Artefacted sequence: ' + str(artifacted))
-            case 'O2':
-                self.o2artSequenceLabel.setText('Artefacted sequence: ' + str(artifacted))
-            case 'T3':
-                self.t3artSequenceLabel.setText('Artefacted sequence: ' + str(artifacted))
-            case 'T4':
-                self.t4artSequenceLabel.setText('Artefacted sequence: ' + str(artifacted))
+            case "O1":
+                self.o1artSequenceLabel.setText(
+                    "Artefacted sequence: " + str(artifacted)
+                )
+            case "O2":
+                self.o2artSequenceLabel.setText(
+                    "Artefacted sequence: " + str(artifacted)
+                )
+            case "T3":
+                self.t3artSequenceLabel.setText(
+                    "Artefacted sequence: " + str(artifacted)
+                )
+            case "T4":
+                self.t4artSequenceLabel.setText(
+                    "Artefacted sequence: " + str(artifacted)
+                )
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def is_both_sides_artifacted_callback(self, artifacted, channel):
         match channel:
-            case 'O1':
-                self.o1artBothSidesLabel.setText('Artefacted both side: ' + str(artifacted))
-            case 'O2':
-                self.o2artBothSidesLabel.setText('Artefacted both side: ' + str(artifacted))
-            case 'T3':
-                self.t3artBothSidesLabel.setText('Artefacted both side: ' + str(artifacted))
-            case 'T4':
-                self.t4artBothSidesLabel.setText('Artefacted both side: ' + str(artifacted))
+            case "O1":
+                self.o1artBothSidesLabel.setText(
+                    "Artefacted both side: " + str(artifacted)
+                )
+            case "O2":
+                self.o2artBothSidesLabel.setText(
+                    "Artefacted both side: " + str(artifacted)
+                )
+            case "T3":
+                self.t3artBothSidesLabel.setText(
+                    "Artefacted both side: " + str(artifacted)
+                )
+            case "T4":
+                self.t4artBothSidesLabel.setText(
+                    "Artefacted both side: " + str(artifacted)
+                )
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def mind_data_callback(self, data, channel):
         match channel:
-            case 'O1':
+            case "O1":
                 self.o1attentionPercentLabel.setText(str(round(data.rel_attention, 2)))
                 self.o1relaxPercentLabel.setText(str(round(data.rel_relaxation, 2)))
                 self.o1attentionRawLabel.setText(str(round(data.inst_attention, 2)))
                 self.o1relaxRawLabel.setText(str(round(data.inst_relaxation, 2)))
-            case 'O2':
+            case "O2":
                 self.o2attentionPercentLabel.setText(str(round(data.rel_attention, 2)))
                 self.o2relaxPercentLabel.setText(str(round(data.rel_relaxation, 2)))
                 self.o2attentionRawLabel.setText(str(round(data.inst_attention, 2)))
                 self.o2relaxRawLabel.setText(str(round(data.inst_relaxation, 2)))
-            case 'T3':
+            case "T3":
                 self.t3attentionPercentLabel.setText(str(round(data.rel_attention, 2)))
                 self.t3relaxPercentLabel.setText(str(round(data.rel_relaxation, 2)))
                 self.t3attentionRawLabel.setText(str(round(data.inst_attention, 2)))
                 self.t3relaxRawLabel.setText(str(round(data.inst_relaxation, 2)))
-            case 'T4':
+            case "T4":
                 self.t4attentionPercentLabel.setText(str(round(data.rel_attention, 2)))
                 self.t4relaxPercentLabel.setText(str(round(data.rel_relaxation, 2)))
                 self.t4attentionRawLabel.setText(str(round(data.inst_attention, 2)))
                 self.t4relaxRawLabel.setText(str(round(data.inst_relaxation, 2)))
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def last_spectral_data_callback(self, spectral_data, channel):
         match channel:
-            case 'O1':
-                self.o1deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + '%')
-                self.o1thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + '%')
-                self.o1alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + '%')
-                self.o1betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + '%')
-                self.o1gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + '%')
-            case 'O2':
-                self.o2deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + '%')
-                self.o2thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + '%')
-                self.o2alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + '%')
-                self.o2betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + '%')
-                self.o2gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + '%')
-            case 'T3':
-                self.t3deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + '%')
-                self.t3thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + '%')
-                self.t3alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + '%')
-                self.t3betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + '%')
-                self.t3gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + '%')
-            case 'T4':
-                self.t4deltaPercentLabel.setText(str(round(spectral_data.delta * 100, 2)) + '%')
-                self.t4thetaPercentLabel.setText(str(round(spectral_data.theta * 100, 2)) + '%')
-                self.t4alphaPercentLabel.setText(str(round(spectral_data.alpha * 100, 2)) + '%')
-                self.t4betaPercentLabel.setText(str(round(spectral_data.beta * 100, 2)) + '%')
-                self.t4gammaPercentLabel.setText(str(round(spectral_data.gamma * 100, 2)) + '%')
+            case "O1":
+                self.o1deltaPercentLabel.setText(
+                    str(round(spectral_data.delta * 100, 2)) + "%"
+                )
+                self.o1thetaPercentLabel.setText(
+                    str(round(spectral_data.theta * 100, 2)) + "%"
+                )
+                self.o1alphaPercentLabel.setText(
+                    str(round(spectral_data.alpha * 100, 2)) + "%"
+                )
+                self.o1betaPercentLabel.setText(
+                    str(round(spectral_data.beta * 100, 2)) + "%"
+                )
+                self.o1gammaPercentLabel.setText(
+                    str(round(spectral_data.gamma * 100, 2)) + "%"
+                )
+            case "O2":
+                self.o2deltaPercentLabel.setText(
+                    str(round(spectral_data.delta * 100, 2)) + "%"
+                )
+                self.o2thetaPercentLabel.setText(
+                    str(round(spectral_data.theta * 100, 2)) + "%"
+                )
+                self.o2alphaPercentLabel.setText(
+                    str(round(spectral_data.alpha * 100, 2)) + "%"
+                )
+                self.o2betaPercentLabel.setText(
+                    str(round(spectral_data.beta * 100, 2)) + "%"
+                )
+                self.o2gammaPercentLabel.setText(
+                    str(round(spectral_data.gamma * 100, 2)) + "%"
+                )
+            case "T3":
+                self.t3deltaPercentLabel.setText(
+                    str(round(spectral_data.delta * 100, 2)) + "%"
+                )
+                self.t3thetaPercentLabel.setText(
+                    str(round(spectral_data.theta * 100, 2)) + "%"
+                )
+                self.t3alphaPercentLabel.setText(
+                    str(round(spectral_data.alpha * 100, 2)) + "%"
+                )
+                self.t3betaPercentLabel.setText(
+                    str(round(spectral_data.beta * 100, 2)) + "%"
+                )
+                self.t3gammaPercentLabel.setText(
+                    str(round(spectral_data.gamma * 100, 2)) + "%"
+                )
+            case "T4":
+                self.t4deltaPercentLabel.setText(
+                    str(round(spectral_data.delta * 100, 2)) + "%"
+                )
+                self.t4thetaPercentLabel.setText(
+                    str(round(spectral_data.theta * 100, 2)) + "%"
+                )
+                self.t4alphaPercentLabel.setText(
+                    str(round(spectral_data.alpha * 100, 2)) + "%"
+                )
+                self.t4betaPercentLabel.setText(
+                    str(round(spectral_data.beta * 100, 2)) + "%"
+                )
+                self.t4gammaPercentLabel.setText(
+                    str(round(spectral_data.gamma * 100, 2)) + "%"
+                )
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def raw_spectral_data_callback(self, spect_vals, channel):
         match channel:
-            case 'O1':
+            case "O1":
                 self.o1alphaRawLabel.setText(str(round(spect_vals.alpha, 2)))
                 self.o1betaRawLabel.setText(str(round(spect_vals.beta, 2)))
-            case 'O2':
+            case "O2":
                 self.o2alphaRawLabel.setText(str(round(spect_vals.alpha, 2)))
                 self.o2betaRawLabel.setText(str(round(spect_vals.beta, 2)))
-            case 'T3':
+            case "T3":
                 self.t3alphaRawLabel.setText(str(round(spect_vals.alpha, 2)))
                 self.t3betaRawLabel.setText(str(round(spect_vals.beta, 2)))
-            case 'T4':
+            case "T4":
                 self.t4alphaRawLabel.setText(str(round(spect_vals.alpha, 2)))
                 self.t4betaRawLabel.setText(str(round(spect_vals.beta, 2)))
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def __close_screen(self):
         self.__stop_signal()
@@ -455,7 +622,7 @@ class SpectrumScreen(QMainWindow):
             self.__start_signal()
 
     def __start_signal(self):
-        self.signalButton.setText('Stop')
+        self.signalButton.setText("Stop")
         self.o1Graph.start_draw()
         self.o2Graph.start_draw()
         self.t3Graph.start_draw()
@@ -465,7 +632,7 @@ class SpectrumScreen(QMainWindow):
         self.__is_started = True
 
     def __stop_signal(self):
-        self.signalButton.setText('Start')
+        self.signalButton.setText("Start")
         self.o1Graph.stop_draw()
         self.o2Graph.stop_draw()
         self.t3Graph.stop_draw()
@@ -479,65 +646,65 @@ class SpectrumScreen(QMainWindow):
 
     def __processed_waves(self, waves, channel):
         match channel:
-            case 'O1':
+            case "O1":
                 self.o1_alpha_raw.setText(str(round(waves.alpha_raw, 4)))
                 self.o1_beta_raw.setText(str(round(waves.beta_raw, 4)))
                 self.o1_theta_raw.setText(str(round(waves.theta_raw, 4)))
                 self.o1_delta_raw.setText(str(round(waves.delta_raw, 4)))
                 self.o1_gamma_raw.setText(str(round(waves.gamma_raw, 4)))
-                self.o1_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + '%')
-                self.o1_beta_percent.setText(str(round(waves.beta_rel * 100)) + '%')
-                self.o1_theta_percent.setText(str(round(waves.theta_rel * 100)) + '%')
-                self.o1_delta_percent.setText(str(round(waves.delta_rel * 100)) + '%')
-                self.o1_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + '%')
-            case 'O2':
+                self.o1_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + "%")
+                self.o1_beta_percent.setText(str(round(waves.beta_rel * 100)) + "%")
+                self.o1_theta_percent.setText(str(round(waves.theta_rel * 100)) + "%")
+                self.o1_delta_percent.setText(str(round(waves.delta_rel * 100)) + "%")
+                self.o1_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + "%")
+            case "O2":
                 self.o2_alpha_raw.setText(str(round(waves.alpha_raw, 4)))
                 self.o2_beta_raw.setText(str(round(waves.beta_raw, 4)))
                 self.o2_theta_raw.setText(str(round(waves.theta_raw, 4)))
                 self.o2_delta_raw.setText(str(round(waves.delta_raw, 4)))
                 self.o2_gamma_raw.setText(str(round(waves.gamma_raw, 4)))
-                self.o2_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + '%')
-                self.o2_beta_percent.setText(str(round(waves.beta_rel * 100)) + '%')
-                self.o2_theta_percent.setText(str(round(waves.theta_rel * 100)) + '%')
-                self.o2_delta_percent.setText(str(round(waves.delta_rel * 100)) + '%')
-                self.o2_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + '%')
-            case 'T3':
+                self.o2_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + "%")
+                self.o2_beta_percent.setText(str(round(waves.beta_rel * 100)) + "%")
+                self.o2_theta_percent.setText(str(round(waves.theta_rel * 100)) + "%")
+                self.o2_delta_percent.setText(str(round(waves.delta_rel * 100)) + "%")
+                self.o2_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + "%")
+            case "T3":
                 self.t3_alpha_raw.setText(str(round(waves.alpha_raw, 4)))
                 self.t3_beta_raw.setText(str(round(waves.beta_raw, 4)))
                 self.t3_theta_raw.setText(str(round(waves.theta_raw, 4)))
                 self.t3_delta_raw.setText(str(round(waves.delta_raw, 4)))
                 self.t3_gamma_raw.setText(str(round(waves.gamma_raw, 4)))
-                self.t3_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + '%')
-                self.t3_beta_percent.setText(str(round(waves.beta_rel * 100)) + '%')
-                self.t3_theta_percent.setText(str(round(waves.theta_rel * 100)) + '%')
-                self.t3_delta_percent.setText(str(round(waves.delta_rel * 100)) + '%')
-                self.t3_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + '%')
-            case 'T4':
+                self.t3_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + "%")
+                self.t3_beta_percent.setText(str(round(waves.beta_rel * 100)) + "%")
+                self.t3_theta_percent.setText(str(round(waves.theta_rel * 100)) + "%")
+                self.t3_delta_percent.setText(str(round(waves.delta_rel * 100)) + "%")
+                self.t3_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + "%")
+            case "T4":
                 self.t4_alpha_raw.setText(str(round(waves.alpha_raw, 4)))
                 self.t4_beta_raw.setText(str(round(waves.beta_raw, 4)))
                 self.t4_theta_raw.setText(str(round(waves.theta_raw, 4)))
                 self.t4_delta_raw.setText(str(round(waves.delta_raw, 4)))
                 self.t4_gamma_raw.setText(str(round(waves.gamma_raw, 4)))
-                self.t4_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + '%')
-                self.t4_beta_percent.setText(str(round(waves.beta_rel * 100)) + '%')
-                self.t4_theta_percent.setText(str(round(waves.theta_rel * 100)) + '%')
-                self.t4_delta_percent.setText(str(round(waves.delta_rel * 100)) + '%')
-                self.t4_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + '%')
+                self.t4_alpha_percent.setText(str(round(waves.alpha_rel * 100)) + "%")
+                self.t4_beta_percent.setText(str(round(waves.beta_rel * 100)) + "%")
+                self.t4_theta_percent.setText(str(round(waves.theta_rel * 100)) + "%")
+                self.t4_delta_percent.setText(str(round(waves.delta_rel * 100)) + "%")
+                self.t4_gamma_percent.setText(str(round(waves.gamma_rel * 100)) + "%")
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def __processed_spectrum(self, spectrum, channel):
         match channel:
-            case 'O1':
+            case "O1":
                 self.o1Graph.update_data(spectrum)
-            case 'O2':
+            case "O2":
                 self.o2Graph.update_data(spectrum)
-            case 'T3':
+            case "T3":
                 self.t3Graph.update_data(spectrum)
-            case 'T4':
+            case "T4":
                 self.t4Graph.update_data(spectrum)
             case _:
-                print('Unknown channel')
+                print("Unknown channel")
 
     def __close_screen(self):
         self.__stop_signal()
