@@ -1,12 +1,3 @@
-# NeuroSamples
+# BrainBit PC
 
-The repository contains examples of using NeuroSDK 2 for all supported platforms. The examples show the capabilities of neurosdk in the field of searching, connecting and recieving a signal from BrainBit and Callibri devices.
-
-Available now:
- - [x] Android
- - [ ] iOS 
- - [x] Unity
- - [x] .dotNet
- - [x] Python
- - [x] Xamarin
- - [x] ReactNative
+A little app to connect to BrainBit device and record the data from it.
