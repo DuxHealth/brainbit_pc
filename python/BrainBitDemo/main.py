@@ -252,7 +252,7 @@ class SignalScreen(QMainWindow):
                 {
                     "label": channel,
                     "dimension": DIMENSION,
-                    "sample_rate": SAMPLE_RATE,
+                    "sample_frequency": SAMPLE_RATE,
                     "physical_min": PHYSICAL_MIN,
                     "physical_max": PHYSICAL_MAX,
                     "digital_min": DIGITAL_MIN,
@@ -288,7 +288,7 @@ class SignalScreen(QMainWindow):
         np.save(f"{self.file.path[:-4]}.npy", signal_array)
         if self.file:
             self.file.setStartdatetime(self.start_time)
-            c = (DIGITAL_MAX * signal_array / RANGE).astype(int).T
+            c = (DIGITAL_MAX * signal_array / RANGE).astype(np.int32).T
             self.file.writeSamples(np.ascontiguousarray(c), digital=True)
             self.file.close()
             self.file = None
