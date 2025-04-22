@@ -102,6 +102,7 @@ class SearchScreen(QMainWindow):
         brain_bit_controller.create_and_connect(
             sensor_info=self.sensorsList[item_number]
         )
+        print("Connected to sensor: ", self.sensorsList[item_number].Name, "")
 
     def __is_sensor_connected(self, sensor_state):
         self.__close_screen()
@@ -245,7 +246,7 @@ class SignalScreen(QMainWindow):
 
         # Create a new file
         timestamp = datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
-        filename = f"{FILE_PREFIX}_{timestamp}.edf"
+        filename = f"{FILE_PREFIX}_{brain_bit_controller.sensor_serial_number}_{timestamp}.edf"
         self.file = pyedflib.EdfWriter(filename, 4, file_type=pyedflib.FILETYPE_BDFPLUS)
         self.file.setSignalHeaders(
             [

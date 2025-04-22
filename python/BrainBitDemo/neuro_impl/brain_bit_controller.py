@@ -63,6 +63,7 @@ class BrainBitController(QObject):
             else:
                 if self.sensorConnectionState is not None:
                     self.sensorConnectionState.emit(SensorState.StateOutOfRange)
+            print(f"Connected to device with SN: {self.__sensor.serial_number}")
 
         self.thread = QThread()
         self.worker = Worker(device_connection)
@@ -85,6 +86,10 @@ class BrainBitController(QObject):
 
     def full_info(self):
         pass
+
+    @property
+    def sensor_serial_number(self):
+        return self.__sensor.serial_number if self.__sensor else None
 
     def start_resist(self):
         def resist_data_received(sensor, resist):

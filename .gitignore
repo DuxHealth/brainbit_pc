@@ -1,3 +1,7 @@
 logs
-*__pycache__/*
+__pycache__/
+*.py[cod]
+*.edf
+*.npy
+.venv
 .idea
